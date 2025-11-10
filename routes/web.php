@@ -2,21 +2,69 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Mentor\MentorDashboardController;
+use App\Http\Controllers\Murid\MuridDashboardController;
+use App\Http\Controllers\Auth\RegisterMuridController;
+use App\Http\Controllers\Auth\RegisterMentorController;
+use App\Http\Controllers\Auth\ForgotPasswordMuridController;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
 */
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 
 Route::redirect('/dashboard', '/')->middleware('guest');
+
+/*
+|--------------------------------------------------------------------------
+| Authentication Routes (Custom)
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('guest')->group(function () {
+
+    // Murid Registration (2 steps)
+    Route::get('/register/murid', [RegisterMuridController::class, 'showRegistrationForm'])
+        ->name('register.murid');
+    Route::post('/register/murid', [RegisterMuridController::class, 'register'])
+        ->name('register.murid.post');
+    Route::get('/register/murid/preferensi', [RegisterMuridController::class, 'showPreferensiForm'])
+        ->name('register.murid.preferensi');
+
+    // Mentor Registration
+    Route::get('/register/mentor', [RegisterMentorController::class, 'showRegistrationForm'])
+        ->name('register.mentor');
+    Route::post('/register/mentor', [RegisterMentorController::class, 'register'])
+        ->name('register.mentor.post');
+    Route::get('/register/mentor/pending', [RegisterMentorController::class, 'showPendingPage'])
+        ->name('register.mentor.pending');
+
+    // Registration Success Page
+    Route::get('/register/success', function () {
+        return view('auth.register-success');
+    })->name('register.success');
+
+    // Forgot Password for Murid (with security question)
+    Route::get('/password/murid/request', [ForgotPasswordMuridController::class, 'showUsernameForm'])
+        ->name('password.murid.request');
+    Route::post('/password/murid/check', [ForgotPasswordMuridController::class, 'checkUsername'])
+        ->name('password.murid.check');
+    Route::post('/password/murid/verify', [ForgotPasswordMuridController::class, 'verifyAnswer'])
+        ->name('password.murid.verify');
+    Route::post('/password/murid/reset', [ForgotPasswordMuridController::class, 'resetPassword'])
+        ->name('password.murid.reset');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Authenticated Routes
+|--------------------------------------------------------------------------
+*/
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 

@@ -116,6 +116,29 @@
   --text-6xl--letter-spacing: -0.02em;
 
   --breakpoint-xs: 480px;
+
+  --color-iqrain-pink: #F387A9;
+  --color-iqrain-yellow: #FFC801;
+  --color-iqrain-blue: #56B1F3;
+  --color-iqrain-dark-blue: #234275;
+}
+
+@layer components {
+    .phrase {
+        display: inline-block;
+        text-wrap: nowrap;
+        font-family: 'TegakBersambung', cursive;
+    }
+
+    .phrase::after {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 16px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50' preserveAspectRatio='none'%3E%3Cpath fill='none' stroke='%239ca3af' stroke-width='4' d='M5,5 C30,35 70,35 95,5' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+    }
 }
 
 /*
@@ -127,6 +150,12 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
+  @font-face {
+      font-family: 'TegakBersambung';
+      src: url('/fonts/TegakBersambung_IWK.ttf') format('truetype');
+      /* unicode-range: U+0041-007A; */
+  }
+  
   *,
   ::after,
   ::before,
