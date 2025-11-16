@@ -2,6 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\MentorDashboardController;
+use App\Http\Controllers\MuridDashboardController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +22,12 @@ use App\Http\Controllers\LandingController;
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 
 Route::redirect('/dashboard', '/')->middleware('guest');
+
+Route::get('/game/pasangkan-huruf', function () {
+    // Diubah dari 'game' menjadi 'drag-drop' sesuai nama file Anda
+    return view('drag-drop'); 
+})->name('game.play');
+
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
@@ -50,4 +61,5 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::get('/progress', [MuridDashboardController::class, 'progress'])->name('progress');
         Route::get('/mentors', [MuridDashboardController::class, 'mentors'])->name('mentors');
     });
+
 });
