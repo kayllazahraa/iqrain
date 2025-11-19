@@ -7,32 +7,50 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'IQRAIN - Belajar Iqra Menyenangkan')</title>
 
-    {{-- <script src="https://cdn.tailwindcss.com"></script> --}}
+    {{-- Tailwind CSS & Custom CSS via Vite --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap');
+        /* Font Tegak Bersambung IWK (Pastikan path benar) */
+        @font-face {
+            font-family: 'Tegak Bersambung IWK';
+            src: url("{{ asset('fonts/TegakBersambung_IWK.ttf') }}") format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
 
+        /* Import Font Titan One dari Google Fonts secara global */
+        @import url('https://fonts.googleapis.com/css2?family=Titan+One&display=swap');
+        /* Import Font Nanum Myeongjo dari Google Fonts secara global */
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo&display=swap');
+        /* Import Font Fredoka dari Google Fonts secara global */
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka&display=swap');
+
+
+        /* Default Font for everything */
         * {
             font-family: 'Fredoka', sans-serif;
         }
 
-        /* --- PERUBAHAN 1: Sederhanakan Body --- */
+        /* --- Body --- */
         body {
             background: linear-gradient(180deg, #87CEEB 0%, #B0E0E6 100%);
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
-            /* Kita tidak lagi memerlukan flexbox karena footer dihilangkan */
         }
 
-        /* Pink Navbar (Tidak diubah) */
+        /* Style Container Navbar */
         .navbar-murid {
-            background: linear-gradient(135deg, #FF6B9D 0%, #E85A8B 100%);
-            box-shadow: 0 4px 20px rgba(255, 107, 157, 0.3);
+            background: #F387A9;
+            border-radius: 74px;
+            box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
         }
 
+        /* Navbar Link Items */
         .nav-item {
+            font-family: 'Tegak Bersambung IWK', cursive;
+            font-size: 25px;
             transition: all 0.3s ease;
         }
 
@@ -50,51 +68,29 @@
             color: white;
         }
 
-        /* --- PERUBAHAN 2: Hapus CSS Footer --- */
-        /* .bottom-decoration {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 10;
-            pointer-events: none;
-        }
-        */
-
-        /* --- PERUBAHAN 3: Hapus Padding Bawah --- */
+        /* --- Padding Content --- */
         .content-wrapper {
-            /* min-height: calc(100vh - 200px); <-- DIHAPUS */
-            /* padding-bottom: 220px;         <-- DIHAPUS */
-
-            /* Kita hanya perlu padding atas untuk navbar */
             padding-top: 80px;
-            /* Sesuaikan jika perlu */
+            padding-bottom: 50px;
         }
 
-        /* Bee Animation (Tidak diubah) */
+        /* Bee Animation */
         @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0px) rotate(-5deg);
-            }
-
-            50% {
-                transform: translateY(-20px) rotate(5deg);
-            }
+            0%, 100% { transform: translateY(0px) rotate(-5deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
         }
 
         .bee-float {
             animation: float 3s ease-in-out infinite;
         }
 
-        /* Card styles (Tidak diubah) */
+        /* Card styles */
         .card-rounded {
             border-radius: 30px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
         }
 
-        /* Button styles (Tidak diubah) */
+        /* Button styles */
         .btn-primary {
             background: linear-gradient(135deg, #FF6B9D 0%, #E85A8B 100%);
             color: white;
@@ -127,23 +123,39 @@
             color: white;
         }
 
-        /* Custom scrollbar (Tidak diubah) */
-        ::-webkit-scrollbar {
-            width: 10px;
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #FF6B9D; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #E85A8B; }
+
+        /* Menambahkan font-family kustom (di sini kita bisa menambahkan !important) */
+        .font-titan {
+            font-family: 'Titan One', sans-serif !important;
         }
 
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
+        .font-cursive-iwk {
+            font-family: 'Tegak Bersambung IWK', cursive !important;
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: #FF6B9D;
-            border-radius: 10px;
+        .font-nanum {
+            font-family: 'Nanum Myeongjo', serif !important;
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: #E85A8B;
+        .phrase {
+            display: inline-block;
+            text-wrap: nowrap;
+            font-family: 'Tegak Bersambung IWK', cursive;
+        }
+
+        .phrase::after {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 16px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50' preserveAspectRatio='none'%3E%3Cpath fill='none' stroke='%23ffffff' stroke-width='4' d='M5,5 C30,35 70,35 95,5' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
         }
     </style>
 
@@ -153,7 +165,7 @@
 <body>
 
     @if (!isset($hideNavbar) || !$hideNavbar)
-        <nav class="navbar-murid fixed top-0 left-0 right-0 z-50">
+        <nav class="navbar-murid fixed top-4 left-0 right-0 z-50 w-11/12 max-w-5xl mx-auto rounded-full">
             <div class="container mx-auto px-4 py-3">
                 <div class="flex items-center justify-between max-w-4xl mx-auto">
                     <a href="{{ route('murid.pilih-iqra') }}" class="flex items-center space-x-2">
@@ -195,22 +207,51 @@
         @yield('content')
     </main>
 
-    <div class="fixed top-40 right-20 bee-float z-5">
-        <div class="text-6xl">🐝</div>
-    </div>
-    <div class="fixed top-60 left-20 bee-float z-5" style="animation-delay: 1.5s;">
-        <div class="text-5xl">🐝</div>
+    {{-- FOOTER GLOBAL --}}
+    <div class="w-full relative z-20 -mt-12 pointer-events-none">
+        <img src="{{ asset('images/games/game-footer.webp') }}" alt="Footer Decoration"
+            class="w-full h-auto object-cover block select-none">
     </div>
 
     <script>
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
         async function fetchAPI(url, options = {}) {
-            // ... (kode JS tidak diubah) ...
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        ...(options.headers || {})
+                    }
+                });
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || `API request failed with status ${response.status}`);
+                }
+                return await response.json();
+            } catch (error) {
+                console.error('API Fetch Error:', error);
+                throw error;
+            }
         }
 
         function showToast(message, type = 'success') {
-            // ... (kode JS tidak diubah) ...
+            const toastContainer = document.createElement('div');
+            toastContainer.className = 'fixed bottom-4 right-4 z-[9999] flex items-center p-4 rounded-lg shadow-lg text-white ' +
+                (type === 'success' ? 'bg-green-500' : 'bg-red-500');
+            toastContainer.innerHTML = `
+                <div class="mr-2">
+                    ${type === 'success' ? '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>' : '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'}
+                </div>
+                <div>${message}</div>
+            `;
+            document.body.appendChild(toastContainer);
+            setTimeout(() => {
+                toastContainer.remove();
+            }, 3000);
         }
     </script>
 

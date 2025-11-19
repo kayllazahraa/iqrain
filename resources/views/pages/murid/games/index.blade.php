@@ -10,39 +10,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Mooli&family=Titan+One&display=swap" rel="stylesheet">
 
     <style>
-        /* Definisi font Tegak Bersambung */
-        @font-face {
-            font-family: 'Tegak Bersambung IWK';
-            /* Pastikan path ini benar menunjuk ke file font-mu di folder 'public' */
-            src: url('/fonts/TegakBersambung_IWK.ttf') format('truetype');
-            font-weight: 400;
-            font-style: normal;
-        }
-
         body {
             /* Warna latar soft biru */
             background-color: #E4F2FF;
             /* Gambar pattern */
-            background-image: url('/images/games/game-pattern.webp');
+            background-image: url('{{ asset('images/games/game-pattern.webp') }}');
 
             /* PERUBAHAN: Membuat pattern lebih kecil dan berulang */
-            background-size: 700px;
+            background-size: 500px;
             /* Atur ukuran ubin pattern di sini (misal: 300px) */
             background-repeat: repeat;
             /* ------------------------------------------------ */
 
             background-attachment: fixed;
             background-position: center;
-        }
-
-        /* Menambahkan font-family kustom */
-        .font-titan {
-            font-family: 'Titan One', sans-serif;
-        }
-
-        /* PERUBAHAN: Mengganti font-mooli menjadi Tegak Bersambung */
-        .font-cursive-iwk {
-            font-family: 'Tegak Bersambung IWK', cursive;
         }
     </style>
 @endpush
@@ -95,7 +76,7 @@
 
             <button onclick="startGame()"
                 class="w-full text-2xl py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-white font-cursive-iwk rounded-xl shadow-lg">
-                Mainkan! 🎮
+                Mainkan!
             </button>
         </div>
     </div>
@@ -131,7 +112,8 @@
                         <h3 class="font-titan text-3xl mb-3">Kartu Memori</h3>
                         {{-- PERBAIKAN FONT: Ganti font-mooli menjadi font-cursive-iwk --}}
                         <p class="font-cursive-iwk text-3xl">
-                            Yuk cocokin huruf yang sama. Buka kartunya dan ingat di mana hurufnya tersembunyi!
+                            <span class="phrase">Yuk</span> cocokin huruf yang sama. Buka kartunya dan ingat di mana
+                            hurufnya tersembunyi!
                         </p>
                     </div>
                     <div class="md:w-1/2 flex justify-center">
@@ -195,10 +177,11 @@
         </div>
     </div>
 
-    {{-- Ini adalah Footer dari file LAMA Anda --}}
+    {{-- Ini adalah Footer dari file LAMA Anda
     <footer class="w-full mt-12">
         <img src="/images/games/game-footer.webp" alt="Footer Hiasan" class="w-full object-cover">
-    </footer>
+    </footer> --}}
+
 @endsection
 
 {{-- 3. Kita tetap gunakan @push('scripts') dari file BARU Anda --}}
