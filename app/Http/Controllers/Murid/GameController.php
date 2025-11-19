@@ -50,7 +50,6 @@ class GameController extends Controller
         return view('pages.murid.games.tracing', compact('tingkatan', 'materiPembelajarans', 'gameStatic'));
     }
 
-<<<<<<< HEAD
     public function tracingStandalone(){
         return view('pages.murid.games.tracing');
     }
@@ -117,11 +116,6 @@ class GameController extends Controller
     }
 
 
-=======
-    // ==================================================================
-    // FUNGSI LABIRIN (UPDATE: Map & Latin)
-    // ==================================================================
->>>>>>> e4dcf0e9f11f0ef8a493883471ff085e1e667f32
     public function labirin($tingkatan_id)
     {
         $tingkatan = TingkatanIqra::findOrFail($tingkatan_id);
@@ -292,11 +286,7 @@ class GameController extends Controller
         $totalPoin = HasilGame::where('murid_id', $murid_id)->sum('total_poin');
         $murid = Murid::find($murid_id);
 
-<<<<<<< HEAD
-        // $murid = \App\Models\Murid::find($murid_id);
-=======
         $murid = Murid::find($murid_id);
->>>>>>> e4dcf0e9f11f0ef8a493883471ff085e1e667f32
 
         // Update leaderboard global
         Leaderboard::updateOrCreate(
