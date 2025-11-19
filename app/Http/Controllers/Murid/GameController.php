@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Murid;
 use App\Http\Controllers\Controller;
 use App\Models\TingkatanIqra;
 use App\Models\JenisGame;
-use App\Models\GameStatic;
-use App\Models\SoalDragDrop;
 use App\Models\HasilGame;
 use App\Models\Leaderboard;
 use Illuminate\Http\Request;
@@ -26,15 +24,10 @@ class GameController extends Controller
     public function memoryCard($tingkatan_id)
     {
         $tingkatan = TingkatanIqra::with('materiPembelajarans')->findOrFail($tingkatan_id);
-        $gameStatic = GameStatic::with('jenisGame') 
-            ->where('tingkatan_id', $tingkatan_id)
-            ->whereHas('jenisGame', function ($q) {
-                $q->where('nama_game', 'Memory Card');
-            })->firstOrFail();
-
+        $jenisGame = JenisGame::where('nama_game', 'Memory Card')->firstOrFail();
         $materiPembelajarans = $tingkatan->materiPembelajarans->take(6); // 6 kombo untuk 12 kartu
 
-        return view('pages.murid.games.memory-card', compact('tingkatan', 'materiPembelajarans', 'gameStatic'));     
+        return view('pages.murid.games.memory-card', compact('tingkatan', 'materiPembelajarans', 'jenisGame'));     
     }
 
     public function tracing($tingkatan_id)
@@ -66,15 +59,10 @@ class GameController extends Controller
     public function dragDrop($tingkatan_id)
     {
         $tingkatan = TingkatanIqra::findOrFail($tingkatan_id);
-        $soals = SoalDragDrop::where('tingkatan_id', $tingkatan_id)
-            ->where('status_approval', 'approved')
-            ->inRandomOrder()
-            ->limit(10)
-            ->get();
 
         $jenisGame = JenisGame::where('nama_game', 'Kuis Drag & Drop')->first();
 
-        return view('pages.murid.games.drag-drop', compact('tingkatan', 'soals', 'jenisGame'));
+        return view('pages.murid.games.drag-drop', compact('tingkatan', 'jenisGame'));
     }
 
     public function saveScore(Request $request)
@@ -91,8 +79,7 @@ class GameController extends Controller
         $hasilGame = HasilGame::create([
             'murid_id' => $murid->murid_id,
             'jenis_game_id' => $request->jenis_game_id,
-            'soal_id' => $request->soal_id ?? null,
-            'game_static_id' => $request->game_static_id ?? null,
+            // 'soal_id' => $request->soal_id ?? null,            
             'skor' => $request->skor,
             'total_poin' => $request->total_poin,
             'dimainkan_at' => now(),

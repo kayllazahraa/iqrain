@@ -95,11 +95,7 @@
                     @endforeach
                 </div>
             </div>
-        </div>
-        <div class="w-full flex-shrink-0 z-0">
-            <img src="{{ asset('images/games/game-footer.webp') }}" alt="Footer Pemandangan"
-                class="w-full h-auto object-cover" style="margin-bottom: -1px;">
-        </div>
+        </div>        
 
     </div>
     <style>

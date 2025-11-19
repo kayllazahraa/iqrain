@@ -13,12 +13,12 @@ return [
     /**
      * Cache Rappasoft Frontend Assets
      */
-    'cache_assets' => false,
+    'cache_assets' => true,
 
     /**
      * Enable or Disable automatic injection of core assets
      */
-    'inject_core_assets_enabled' =>false,
+    'inject_core_assets_enabled' => false,
 
     /**
      * Enable or Disable automatic injection of third-party assets
@@ -28,7 +28,7 @@ return [
     /**
      * Enable Blade Directives (Not required if automatically injecting or using bundler approaches)
      */
-    'enable_blade_directives' => false,
+    'enable_blade_directives' => true,
 
     /**
      * Use JSON Translations instead of PHP Array

@@ -4,9 +4,9 @@ var poinBenar = 0;
 var pasanganDitemukan = 0;
 var totalPasangan = 6; 
 
-var gameStaticId = typeof GAME_STATIC_ID !== 'undefined' ? GAME_STATIC_ID : null;
+// var gameStaticId = typeof GAME_STATIC_ID !== 'undefined' ? GAME_STATIC_ID : null;
 var jenisGameId = typeof JENIS_GAME_ID !== 'undefined' ? JENIS_GAME_ID : null;
-var poinMaksimal = typeof POIN_MAKSIMAL !== 'undefined' ? POIN_MAKSIMAL : 100;
+var poinMaksimal = typeof POIN_MAKSIMAL !== 'undefined' ? POIN_MAKSIMAL : 60;
 var POIN_PER_MATCH = poinMaksimal / totalPasangan;
 
 var cardMasterList = [
@@ -133,6 +133,7 @@ function startGame() {
     poinBenar = 0;
     lockBoard = true; 
         
+    document.getElementById("poin-benar").innerText = 0;    
     document.getElementById("current-matches").innerText = pasanganDitemukan;
 
     const boardEl = document.getElementById("board");
@@ -236,6 +237,7 @@ async function update() {
         pasanganDitemukan += 1;
         poinBenar += POIN_PER_MATCH; // (Nanti bisa diubah skornya, misal +10)
         
+        document.getElementById("poin-benar").innerText = Math.round(poinBenar);
         document.getElementById("current-matches").innerText = pasanganDitemukan;
 
         // Cek Menang
@@ -250,8 +252,7 @@ async function update() {
                     'X-CSRF-TOKEN': csrfToken
                 },
                 body: JSON.stringify({
-                    jenis_game_id: jenisGameId, 
-                    game_static_id: gameStaticId,
+                    jenis_game_id: jenisGameId,                    
                     skor: pasanganDitemukan,
                     total_poin: Math.round(poinBenar)
                 })

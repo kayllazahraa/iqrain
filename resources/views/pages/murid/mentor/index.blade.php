@@ -2,207 +2,426 @@
 
 @section('title', 'Pilih Mentor')
 
-@section('content')
-<div class="container mx-auto px-4 py-8">
-    <div class="max-w-5xl mx-auto">
-        
-        <!-- Header -->
-        <div class="text-center mb-12">
-            <div class="flex items-center justify-center gap-4 mb-4">
-                <h1 class="text-5xl font-bold text-blue-900">Kenalan sama<br>Para Mentor!</h1>
-                <div class="w-32">
-                    <img src="{{ asset('images/qira-hello.png') }}" alt="Qira" class="w-full"
-                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E🐘👋%3C/text%3E%3C/svg%3E'">
-                </div>
-            </div>
-            <p class="text-2xl text-blue-800 font-light italic">
-                Belajar akan jadi lebih seru dengan<br>bimbingan para mentor!
-            </p>
-        </div>
-        
-        <!-- Pending Request Alert -->
-        @if($pendingRequest)
-        <div class="bg-yellow-100 border-4 border-yellow-400 rounded-3xl p-6 mb-8">
-            <div class="flex items-center gap-4">
-                <div class="text-5xl">⏳</div>
-                <div>
-                    <p class="text-xl font-bold text-yellow-800">Permintaan sedang diproses</p>
-                    <p class="text-yellow-700">
-                        Kamu sudah mengirim permintaan ke 
-                        <span class="font-bold">{{ $pendingRequest->mentor->user->username }}</span>. 
-                        Tunggu persetujuan ya!
-                    </p>
-                </div>
-            </div>
-        </div>
-        @endif
-        
-        <!-- Mentors Grid -->
-        <div class="grid grid-cols-3 gap-6">
-            @forelse($mentors as $mentor)
-            <div class="mentor-card bg-gradient-to-br from-pink-200 to-pink-100 rounded-3xl p-6 shadow-xl hover:scale-105 transition-transform cursor-pointer"
-                 onclick="showMentorDetail({{ $mentor->mentor_id }}, '{{ $mentor->nama_lengkap }}', '{{ $mentor->user->username }}', {{ $mentor->murids->count() }})">
-                
-                <!-- Success Checkmark -->
-                <div class="flex justify-center mb-4">
-                    <div class="bg-green-400 rounded-full p-3">
-                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                        </svg>
-                    </div>
-                </div>
-                
-                <!-- Egg-shaped Avatar Container -->
-                <div class="bg-gradient-to-br from-yellow-200 to-yellow-100 rounded-full w-32 h-40 mx-auto mb-4 flex items-center justify-center shadow-inner"
-                     style="border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;">
-                    <div class="bg-blue-400 rounded-full w-20 h-20 flex items-center justify-center">
-                        <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
-                        </svg>
-                    </div>
-                </div>
-                
-                <!-- Mentor Info -->
-                <div class="text-center">
-                    <h3 class="text-xl font-bold text-pink-700 mb-1">{{ $mentor->user->username }}</h3>
-                    <p class="text-sm text-pink-600">Kelas: {{ $mentor->nama_lengkap }}</p>
-                </div>
-            </div>
-            @empty
-            <div class="col-span-3 text-center text-gray-500 py-12">
-                Belum ada mentor yang tersedia
-            </div>
-            @endforelse
-        </div>
-        
-    </div>
-</div>
+{{-- CSS --}}
+@push('styles')
+    <style>
+        /* Import Font */
+        @import url('https://fonts.googleapis.com/css2?family=Titan+One&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo&display=swap');
 
-<!-- Mentor Detail Modal -->
-<div id="mentorModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-    <div class="bg-gradient-to-br from-pink-200 to-pink-300 rounded-3xl p-8 max-w-lg mx-4 shadow-2xl relative">
-        <button onclick="closeMentorModal()" class="absolute top-4 right-4 text-pink-700 hover:text-pink-900 text-3xl font-bold">
-            ×
-        </button>
-        
-        <!-- Mentor Avatar -->
-        <div class="bg-gradient-to-br from-yellow-200 to-yellow-100 rounded-full w-40 h-48 mx-auto mb-6 flex items-center justify-center shadow-inner"
-             style="border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;">
-            <div class="bg-blue-400 rounded-full w-24 h-24 flex items-center justify-center">
-                <svg class="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
-                </svg>
-            </div>
-        </div>
-        
-        <!-- Mentor Info -->
-        <div class="text-center mb-6">
-            <h2 class="text-3xl font-bold text-pink-700 mb-2" id="modal-mentor-name">Kak Ajeng</h2>
-            <p class="text-xl text-pink-600" id="modal-mentor-class">Kelas: XXXXX</p>
-        </div>
-        
-        <!-- Stats -->
-        <div class="flex justify-center gap-4 mb-8">
-            <div class="bg-white rounded-2xl px-6 py-3 text-center shadow-lg">
-                <div class="flex items-center gap-2 text-blue-600">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
-                    </svg>
-                    <span class="font-bold text-lg" id="modal-mentor-students">0</span>
-                </div>
-                <p class="text-sm text-gray-600">Murid</p>
-            </div>
-            
-            <div class="bg-white rounded-2xl px-6 py-3 text-center shadow-lg">
-                <div class="flex items-center gap-2 text-green-600">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
-                    </svg>
-                    <span class="font-bold text-lg">2 Tahun</span>
-                </div>
-                <p class="text-sm text-gray-600">Pengalaman</p>
-            </div>
-        </div>
-        
-        <!-- Message -->
-        <div class="bg-white rounded-2xl p-4 mb-6">
-            <p class="text-center text-gray-600 italic">
-                Apakah Kak <span id="modal-mentor-name-2">Ajeng</span> menjadi mentormu?
-            </p>
-        </div>
-        
-        <!-- Actions -->
-        <div class="flex gap-4">
-            <button onclick="closeMentorModal()" class="flex-1 bg-white text-pink-600 font-bold py-3 rounded-full hover:bg-gray-100 transition-colors">
-                Gapapa
-            </button>
-            <button onclick="requestMentor()" id="btn-request-mentor" class="flex-1 bg-gradient-to-r from-pink-500 to-pink-600 text-white font-bold py-3 rounded-full hover:from-pink-600 hover:to-pink-700 transition-colors">
-                Gabung
-            </button>
-        </div>
-    </div>
-</div>
+        @font-face {
+            font-family: 'Tegak Bersambung_IWK';
+            src: url("{{ asset('fonts/TegakBersambung_IWK.ttf') }}") format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
 
-@push('scripts')
-<script>
-    let selectedMentorId = null;
-    const hasPendingRequest = {{ $pendingRequest ? 'true' : 'false' }};
-    const currentMentorId = {{ auth()->user()->murid->mentor_id ?? 'null' }};
-    
-    function showMentorDetail(mentorId, namaLengkap, username, studentCount) {
-        selectedMentorId = mentorId;
-        
-        document.getElementById('modal-mentor-name').textContent = username;
-        document.getElementById('modal-mentor-name-2').textContent = username;
-        document.getElementById('modal-mentor-class').textContent = 'Kelas: ' + namaLengkap;
-        document.getElementById('modal-mentor-students').textContent = studentCount;
-        
-        // Disable button if has pending request or already has mentor
-        const btnRequest = document.getElementById('btn-request-mentor');
-        if (hasPendingRequest || currentMentorId) {
-            btnRequest.disabled = true;
-            btnRequest.classList.add('opacity-50', 'cursor-not-allowed');
-            btnRequest.textContent = hasPendingRequest ? 'Menunggu...' : 'Sudah Punya Mentor';
+        /* Utility Classes */
+        .font-cursive-iwk {
+            font-family: 'Tegak Bersambung_IWK', cursive !important;
         }
-        
-        document.getElementById('mentorModal').style.display = 'flex';
-    }
-    
-    function closeMentorModal() {
-        document.getElementById('mentorModal').style.display = 'none';
-    }
-    
-    async function requestMentor() {
-        if (!selectedMentorId || hasPendingRequest || currentMentorId) {
-            return;
+
+        .font-titan {
+            font-family: 'Titan One', cursive !important;
         }
-        
-        try {
-            const response = await fetchAPI(`/murid/mentor/request/${selectedMentorId}`, {
-                method: 'POST'
-            });
-            
-            if (response.success) {
-                showToast(response.message, 'success');
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500);
-            } else {
-                showToast(response.message, 'error');
-            }
-        } catch (error) {
-            console.error('Error requesting mentor:', error);
-            showToast('Terjadi kesalahan. Coba lagi ya!', 'error');
+
+        .font-nanum {
+            font-family: 'Nanum Myeongjo', serif !important;
         }
-    }
-    
-    // Close modal on outside click
-    document.getElementById('mentorModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closeMentorModal();
+
+        .text-shadow-header {
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
         }
-    });
-</script>
+
+        .text-shadow-popup-name {
+            text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+        }
+
+        .text-shadow-popup-text {
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+        }
+
+        .hover-float:hover {
+            transform: translateY(-5px) scale(1.02);
+        }
+
+        /* Styles Pop Up */
+        .popup-stat-box {
+            width: auto;
+            min-width: 180px;
+            height: auto;
+            padding: 15px 25px;
+
+            flex-shrink: 0;
+            border-radius: 23px;
+            background: #56B1F3;
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .popup-btn {
+            width: auto;
+            height: auto;
+            padding: 10px 40px;
+
+            flex-shrink: 0;
+            border-radius: 9px;
+            background: #F387A9;
+            box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFF;
+            font-family: "Tegak Bersambung_IWK", cursive;
+            font-size: 33px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+            transition: transform 0.2s;
+            border: none;
+        }
+
+        .popup-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .popup-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+    </style>
 @endpush
 
+@section('content')
+
+    {{-- 
+        PERBAIKAN BACKGROUND:
+        Dipisah menjadi layer 'fixed' agar selalu full layar (atas sampai bawah) 
+        dan tidak terpengaruh scroll atau margin konten.
+    --}}
+    <div class="fixed inset-0 w-full h-full z-0 pointer-events-none"
+        style="background: var(--bg-blue, linear-gradient(180deg, #56B1F3 0%, #D3F2FF 100%));">
+
+        {{-- Pattern Landscape (Cover) --}}
+        <div class="absolute inset-0 w-full h-full"
+            style="background-image: url('{{ asset('images/games/game-pattern.webp') }}'); 
+                    background-size: 500px;
+                    background-repeat: repeat;
+                    background-position: center; 
+                    opacity: 0.3;">
+        </div>
+    </div>
+
+    {{-- CONTAINER KONTEN UTAMA --}}
+    {{-- Background dihapus dari sini karena sudah dipindah ke div fixed di atas --}}
+    <div class="min-h-screen w-full relative z-10 flex flex-col overflow-x-hidden -mt-[120px] pt-[140px]">
+
+
+        <div class="relative z-10 flex-grow flex flex-col">
+
+            {{-- HEADER SECTION --}}
+            <div class="container mx-auto px-4 mt-8 mb-12">
+                <div class="flex flex-col-reverse md:flex-row items-center justify-center gap-4 md:gap-12 max-w-6xl mx-auto">
+                    {{-- Teks Header --}}
+                    <div class="text-center md:text-left mt-8 md:mt-32">
+                        <h1
+                            class="font-titan text-[40px] md:text-[55px] text-[#234275] leading-tight mb-2 text-shadow-header">
+                            Kenalan sama Para Mentor!
+                        </h1>
+                        <p
+                            class="font-cursive-iwk text-[35px] md:text-[60px] text-[#234275] leading-none text-shadow-header">
+                            Belajar akan jadi lebih seru dengan<br>bimbingan para mentor!
+                        </p>
+                    </div>
+
+                    {{-- Maskot Gajah --}}
+                    <div class="w-[180px] md:w-[280px] transform hover:rotate-3 transition-transform duration-500">
+                        <img src="{{ asset('images/maskot/qira-happy.webp') }}" alt="Qira Happy"
+                            class="w-full h-auto drop-shadow-2xl">
+                    </div>
+                </div>
+            </div>
+
+            {{-- ALERT PENDING --}}
+            @if ($pendingRequest)
+                <div class="container mx-auto px-4 mb-8">
+                    <div
+                        class="max-w-4xl mx-auto bg-[#FFF9C4] rounded-[35px] p-6 shadow-lg flex flex-col md:flex-row items-center justify-center gap-6 animate-pulse text-center md:text-left">
+                        <div class="text-5xl">⏳</div>
+                        <div>
+                            <p class="font-titan text-2xl text-[#680D2A] mb-1">Permintaan sedang diproses</p>
+                            <p class="font-cursive-iwk text-2xl text-[#680D2A]">
+                                Kamu sudah meminta <span
+                                    class="font-cursive-iwk text-[#680D2A]">{{ $pendingRequest->mentor->nama_lengkap }}</span>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            {{-- MENTOR SECTION --}}
+            <div class="container mx-auto px-4 relative z-10 mb-24">
+                <div class="w-full bg-[#F387A9] rounded-[50px] py-16 px-4 shadow-xl">
+                    <div class="max-w-7xl mx-auto">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-20 gap-x-10 justify-items-center">
+
+                            @forelse($mentors as $index => $mentor)
+                                @php
+                                    $isMirror = $index % 2 !== 0;
+                                    $vectorStyle = $isMirror ? 'transform: scaleX(-1);' : '';
+                                    $checkmarkClass = $isMirror ? 'right-4 rotate-12' : 'left-4 -rotate-12';
+
+                                    // Hitung pengalaman
+                                    $joinDate = \Carbon\Carbon::parse($mentor->created_at);
+                                    $experience = $joinDate->diffInYears(now());
+                                    $experienceDisplay = $experience < 1 ? 1 : $experience;
+                                @endphp
+
+                                {{-- ITEM MENTOR --}}
+                                <div class="relative flex flex-col items-center cursor-pointer group hover-float w-[300px]"
+                                    onclick="showMentorDetail(
+                                     {{ $mentor->mentor_id }}, 
+                                     '{{ $mentor->nama_lengkap }}', 
+                                     '{{ $mentor->user->username }}', 
+                                     {{ $mentor->murids->count() }}, 
+                                     {{ $experienceDisplay }},
+                                     '{{ $mentor->user->avatar_url }}'
+                                    )">
+
+                                    <div class="relative w-[300px] h-[300px] flex items-center justify-center mb-2">
+                                        <img src="{{ asset('images/mentor/Mentor.webp') }}" alt="Frame"
+                                            class="absolute w-full h-full object-contain z-0" style="{{ $vectorStyle }}">
+
+                                        <img src="{{ asset('images/mentor/Centang.webp') }}" alt="Verified"
+                                            class="absolute top-0 w-20 h-20 z-20 drop-shadow-md {{ $checkmarkClass }}">
+
+                                        <div
+                                            class="relative z-10 w-44 h-44 rounded-full overflow-hidden border-[5px] border-white shadow-inner bg-white">
+                                            <img src="{{ $mentor->user->avatar_url }}" alt="{{ $mentor->nama_lengkap }}"
+                                                class="w-full h-full object-cover">
+                                        </div>
+                                    </div>
+
+                                    <div class="text-center z-10 -mt-2">
+                                        <h3 class="font-titan text-[30px] text-white leading-none mb-1 text-shadow-white">
+                                            Kak {{ $mentor->user->username }}
+                                        </h3>
+                                        <p class="font-cursive-iwk text-[40px] text-white leading-tight text-shadow-white">
+                                            Kelas {{ $mentor->nama_lengkap }}
+                                        </p>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="col-span-full text-center py-10">
+                                    <p class="font-cursive-iwk text-4xl text-white/80">Belum ada mentor yang tersedia saat
+                                        ini.</p>
+                                </div>
+                            @endforelse
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    {{-- ======================= --}}
+    {{-- POPUP MODAL DETAIL --}}
+    {{-- ======================= --}}
+    <div id="mentorModal"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300">
+
+        {{-- Container Modal --}}
+        <div class="relative w-[95%] max-w-[1000px] flex items-center justify-center transition-all duration-300 transform scale-95 opacity-0"
+            id="modalContent">
+
+            {{-- Background Popup --}}
+            <img src="{{ asset('images/mentor/Popup.webp') }}" alt="Popup BG"
+                class="w-full h-auto object-contain drop-shadow-2xl relative z-0">
+
+            {{-- Konten Overlay --}}
+            <div class="absolute inset-0 z-10 flex flex-col p-6 md:p-12">
+
+                {{-- WRAPPER UTAMA: Split 30% Kiri - 70% Kanan --}}
+                <div class="flex flex-col md:flex-row w-full flex-grow items-center justify-center">
+
+                    {{-- KOLOM KIRI (30%) - Hanya Foto --}}
+                    <div class="w-full md:w-[30%] flex items-center justify-center h-full mb-4 md:mb-0">
+                        {{-- Foto Mentor (Centered di area 30%) --}}
+                        <div
+                            class="relative z-10 w-32 h-32 md:w-50 md:h-50 rounded-full border-[5px] border-white shadow-lg bg-white overflow-hidden translate-x-15 translate-y-15">
+                            <img id="modal-mentor-img" src="" alt="Avatar" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+
+                    {{-- KOLOM KANAN (70%) - Informasi & Statistik --}}
+                    <div class="w-full md:w-[70%] flex flex-col items-center justify-center pl-0 md:pl-6">
+
+                        {{-- Nama Mentor --}}
+                        <h2 id="modal-mentor-name"
+                            class="font-titan text-[32px] md:text-[45px] text-[#AC3F61] text-center leading-none mb-1 text-shadow-popup-name">
+                            Kak Nama
+                        </h2>
+
+                        {{-- Kelas --}}
+                        <p id="modal-mentor-class"
+                            class="font-cursive-iwk text-[28px] md:text-[40px] text-[#AC3F61] text-center leading-tight mb-4 md:mb-6 text-shadow-popup-text">
+                            Kelas XXXXX
+                        </p>
+
+                        {{-- Statistik (Murid & Tahun) --}}
+                        <div class="flex flex-wrap justify-center gap-3 md:gap-6 mb-4 md:mb-6 w-full">
+                            {{-- Kotak Murid --}}
+                            <div class="popup-stat-box scale-90 md:scale-100">
+                                <svg width="35" height="35" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z"
+                                        fill="#FFFCFC" />
+                                    <path
+                                        d="M12.0002 14.5C6.99016 14.5 2.91016 17.86 2.91016 22C2.91016 22.28 3.13016 22.5 3.41016 22.5H20.5902C20.8702 22.5 21.0902 22.28 21.0902 22C21.0902 17.86 17.0102 14.5 12.0002 14.5Z"
+                                        fill="#FFFCFC" />
+                                </svg>
+                                <div class="flex flex-col items-start justify-center leading-none pt-1">
+                                    <span id="modal-mentor-students"
+                                        class="font-nanum text-[24px] md:text-[28px] text-[#FFFCFC] text-shadow-popup-text block">0</span>
+                                    <span
+                                        class="font-cursive-iwk text-[20px] md:text-[24px] text-[#FFFCFC] block -mt-1">murid</span>
+                                </div>
+                            </div>
+
+                            {{-- Kotak Tahun --}}
+                            <div class="popup-stat-box scale-90 md:scale-100">
+                                <svg width="30" height="30" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="12" cy="12" r="10" stroke="#FFFCFC" stroke-width="2"
+                                        fill="none" />
+                                    <path d="M12 6V12L16 14" stroke="#FFFCFC" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                </svg>
+                                <div class="flex flex-col items-start justify-center leading-none pt-1">
+                                    <span id="modal-mentor-experience"
+                                        class="font-nanum text-[24px] md:text-[28px] text-[#FFFCFC] text-shadow-popup-text block">0</span>
+                                    <span
+                                        class="font-cursive-iwk text-[20px] md:text-[24px] text-[#FFFCFC] block -mt-1">tahun</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Kalimat Ajakan --}}
+                        <p
+                            class="font-cursive-iwk text-[24px] md:text-[35px] text-[#AC3F61] text-center leading-tight text-shadow-popup-text px-2 w-full">
+                            Ajukan <span id="modal-mentor-name-2" class="font-cursive-iwk">...</span> menjadi mentormu
+                        </p>
+                    </div>
+                </div>
+
+                {{-- SECTION TOMBOL (Centered di Bawah) --}}
+                <div class="w-full flex justify-center gap-4 md:gap-8 mt-4 md:mt-2">
+                    <button onclick="closeMentorModal()" class="popup-btn">
+                        Kembali
+                    </button>
+                    <button id="btn-request-mentor" onclick="requestMentor()" class="popup-btn">
+                        Ajukan
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    @push('scripts')
+        <script>
+            let selectedMentorId = null;
+            const hasPendingRequest = {{ $pendingRequest ? 'true' : 'false' }};
+            const currentMentorId = {{ auth()->user()->murid->mentor_id ?? 'null' }};
+
+            function showMentorDetail(mentorId, namaLengkap, username, studentCount, experience, avatarUrl) {
+                selectedMentorId = mentorId;
+
+                document.getElementById('modal-mentor-name').textContent = 'Kak ' + username;
+                document.getElementById('modal-mentor-name-2').textContent = 'Kak ' + username;
+                document.getElementById('modal-mentor-class').textContent = 'Kelas: ' + namaLengkap;
+                document.getElementById('modal-mentor-students').textContent = studentCount;
+                document.getElementById('modal-mentor-experience').textContent = experience;
+                document.getElementById('modal-mentor-img').src = avatarUrl;
+
+                const btnRequest = document.getElementById('btn-request-mentor');
+                btnRequest.disabled = false;
+                btnRequest.textContent = 'Ajukan';
+
+                if (hasPendingRequest) {
+                    btnRequest.disabled = true;
+                    btnRequest.textContent = 'Menunggu';
+                } else if (currentMentorId) {
+                    btnRequest.disabled = true;
+                    btnRequest.textContent = 'Sudah Punya';
+                }
+
+                const modal = document.getElementById('mentorModal');
+                const content = document.getElementById('modalContent');
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                setTimeout(() => {
+                    content.classList.remove('scale-95', 'opacity-0');
+                    content.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            }
+
+            function closeMentorModal() {
+                const modal = document.getElementById('mentorModal');
+                const content = document.getElementById('modalContent');
+                content.classList.remove('scale-100', 'opacity-100');
+                content.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    modal.classList.remove('flex');
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+
+            async function requestMentor() {
+                if (!selectedMentorId || hasPendingRequest || currentMentorId) return;
+
+                const btnRequest = document.getElementById('btn-request-mentor');
+                const originalText = btnRequest.textContent;
+                btnRequest.disabled = true;
+                btnRequest.textContent = '...';
+
+                try {
+                    const url = `{{ url('/murid/mentor/request') }}/${selectedMentorId}`;
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                'content'),
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        }
+                    });
+                    const data = await response.json();
+                    if (data.success || response.ok) {
+                        alert('Permintaan berhasil dikirim!');
+                        window.location.reload();
+                    } else {
+                        alert(data.message || 'Gagal mengirim permintaan.');
+                        btnRequest.disabled = false;
+                        btnRequest.textContent = originalText;
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan sistem.');
+                    btnRequest.disabled = false;
+                    btnRequest.textContent = originalText;
+                }
+            }
+
+            document.getElementById('mentorModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeMentorModal();
+                }
+            });
+        </script>
+    @endpush
 @endsection

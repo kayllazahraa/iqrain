@@ -29,8 +29,7 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
             UserSeeder::class,
             TingkatanIqraSeeder::class,
-            JenisGameSeeder::class,
-            GameStaticSeeder::class, // nanti bisa di hapus lur
+            JenisGameSeeder::class,           
         ]);
 
         // 2. Buat 20 Murid (Sekarang kita panggil Murid::factory() langsung)

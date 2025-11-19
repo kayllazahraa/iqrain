@@ -164,11 +164,10 @@
         </div>
             
         <!-- Evaluasi Content -->       
-        <div id="content-evaluasi" class="tab-content hidden flex justify-center items-start py-10">
-            <div class="bg-white rounded-3xl shadow-2xl flex flex-col h-auto">    
-                            
+        <div id="content-evaluasi" class="tab-content hidden flex justify-center items-start">
+            <div class="bg-white rounded-3xl shadow-2xl flex flex-col h-auto w-[800px]">                          
                 <!-- Scrollable Content -->
-                <div class="flex-1 min-h-0 overflow-y-auto px-6 space-y-4">
+                <div class="flex-1 min-h-0 overflow-y-auto py-10 px-6 space-y-4">
                     @forelse($evaluasiData as $data)
                     <div class="bg-[#f387a9] rounded-2xl p-4 m-4 shadow-lg hover:scale-105 transition-transform">
                         <div class="flex items-center gap-4">
