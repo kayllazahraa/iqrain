@@ -44,9 +44,72 @@ class GameController extends Controller
         return view('pages.murid.games.tracing', compact('tingkatan', 'materiPembelajarans', 'gameStatic'));
     }
 
-    // ==================================================================
-    // FUNGSI LABIRIN (UPDATE: Map & Latin)
-    // ==================================================================
+    public function tracingStandalone(){
+        return view('pages.murid.games.tracing');
+    }
+
+    /**
+     * Menyimpan hasil (skor) dari game Tracing.
+     */
+    public function storeTracingScore(Request $request)
+    {
+        // 1. Validasi Input
+        $request->validate([
+            'tingkatan_id' => 'required|exists:tingkatan_iqras,tingkatan_id',
+            'skor' => 'required|integer|min:0',
+            // 'waktu_pengerjaan' dan 'detail_hasil' bersifat opsional
+            'waktu_pengerjaan' => 'nullable|integer|min:0',
+            'detail_hasil' => 'nullable|string',
+        ]);
+
+        // 2. Dapatkan ID Murid yang sedang login
+        $user = Auth::user();
+        // Pastikan pengguna terautentikasi dan memiliki relasi Murid
+        if (!$user || !$user->murid) {
+            return response()->json(['error' => 'Murid tidak terautentikasi.'], 403);
+        }
+        $murid_id = $user->murid->murid_id;
+
+        // 3. Dapatkan Jenis Game ID untuk 'Tracing'
+        $jenisGame = JenisGame::where('nama_game', 'Tracking')->first();
+
+        if (!$jenisGame) {
+            // Error jika Jenis Game 'Tracing' belum ada di database
+            return response()->json(['error' => 'Jenis game Tracking tidak ditemukan.'], 404);
+        }
+
+        // 4. Simpan Hasil Game baru
+        try {
+            DB::beginTransaction();
+
+            HasilGame::create([
+                'murid_id' => $murid_id,
+                'jenis_game_id' => $jenisGame->jenis_game_id,
+                'tingkatan_id' => $request->tingkatan_id,
+                'skor' => $request->skor,
+                'waktu_pengerjaan' => $request->waktu_pengerjaan,
+                'detail_hasil' => $request->detail_hasil,
+            ]);
+
+            // 5. Update Leaderboard
+            $this->updateLeaderboardAndRecalculateRankings($murid_id);
+
+            DB::commit();
+
+            // Beri respons sukses (bisa diganti redirect ke halaman lain jika perlu)
+            return response()->json([
+                'success' => 'Skor game Tracing berhasil disimpan!',
+                'skor' => $request->skor
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Error saving tracing score: " . $e->getMessage());
+            return response()->json(['error' => 'Gagal menyimpan skor. Silakan coba lagi.'], 500);
+        }
+    }
+
+
     public function labirin($tingkatan_id)
     {
         $tingkatan = TingkatanIqra::with('materiPembelajarans')->findOrFail($tingkatan_id);
@@ -211,6 +274,7 @@ class GameController extends Controller
     private function updateLeaderboard($murid_id)
     {
         $totalPoin = HasilGame::where('murid_id', $murid_id)->sum('total_poin');
+        $murid = Murid::find($murid_id);
 
         $murid = Murid::find($murid_id);
 

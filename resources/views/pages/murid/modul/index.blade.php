@@ -3,303 +3,346 @@
 @section('title', 'Modul Pembelajaran - Iqra ' . $tingkatan->level)
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <div class="max-w-5xl mx-auto">
+{{-- OUTER BACKGROUND: BIRU --}}
+<div class="pt-4 sm:pt-8 pb-0 px-4 flex items-start justify-center relative overflow-hidden">
+    
+    {{-- Pattern Background --}}
+    <img src="{{ asset('images/pattern/pattern1.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover opacity-10 pointer-events-none mix-blend-overlay" alt="pattern">
+
+    {{-- KONTEN UTAMA: BLOK KREM BESAR --}}
+    <div class="w-full max-w-6xl bg-[#FDF6E9] rounded-[3rem] shadow-2xl border-[6px] border-white/30 relative z-10 overflow-hidden flex flex-col min-h-[75vh] mb-0">
         
-        <!-- Tab Toggle (Video / Materi Modul) -->
-        <div class="flex justify-center items-center mb-8">
-            <!-- Stars decoration -->
-            <div class="text-5xl mr-4 animate-pulse">⭐</div>
-            
-            <div class="bg-white rounded-full p-1 shadow-lg inline-flex">
-                <button onclick="switchTab('video')" 
-                        id="tab-video" 
-                        class="tab-button px-8 py-3 rounded-full font-bold text-lg transition-all duration-300">
-                    Video
-                </button>
-                <button onclick="switchTab('materi')" 
-                        id="tab-materi" 
-                        class="tab-button px-8 py-3 rounded-full font-bold text-lg transition-all duration-300">
-                    Materi Modul
-                </button>
-            </div>
-            
-            <div class="text-5xl ml-4 animate-pulse" style="animation-delay: 0.5s;">⭐</div>
-        </div>
-        
-        <!-- Video Tab Content -->
-        <div id="content-video" class="tab-content">
-            <div class="bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-3xl p-8 shadow-2xl border-4 border-white">
-                <div class="flex gap-6">
-                    <!-- Video Player -->
-                    <div class="flex-1 bg-pink-200 rounded-2xl overflow-hidden" style="aspect-ratio: 16/9;">
-                        @if($videos && $videos->count() > 0)
-                            <video id="video-player" class="w-full h-full" controls>
-                                <source src="{{ asset('storage/' . $videos->first()->video_path) }}" type="video/mp4">
-                                @if($videos->first()->subtitle_path)
-                                    <track kind="subtitles" src="{{ asset('storage/' . $videos->first()->subtitle_path) }}" srclang="id" label="Indonesia" default>
-                                @endif
-                                Browser kamu tidak mendukung video player.
-                            </video>
-                        @else
-                            <div class="w-full h-full flex items-center justify-center text-pink-400">
-                                <div class="text-center">
-                                    <div class="text-6xl mb-4">🎬</div>
-                                    <p class="text-xl">Video akan segera hadir!</p>
-                                </div>
-                            </div>
-                        @endif
-                    </div>
-                    
-                    <!-- Video List -->
-                    <div class="w-48 space-y-3">
-                        @forelse($videos as $index => $video)
-                            <button onclick="loadVideo({{ $index }})" 
-                                    class="video-item w-full bg-pink-400 hover:bg-pink-500 text-white rounded-2xl p-4 text-center font-semibold transition-all duration-300 hover:scale-105"
-                                    data-video-src="{{ asset('storage/' . $video->video_path) }}"
-                                    data-subtitle-src="{{ $video->subtitle_path ? asset('storage/' . $video->subtitle_path) : '' }}">
-                                Video {{ $index + 1 }}
-                            </button>
-                        @empty
-                            <div class="text-center text-gray-500 text-sm">
-                                Belum ada video
-                            </div>
-                        @endforelse
-                    </div>
-                </div>
+        {{-- HEADER & TABS WRAPPER --}}
+        <div class="bg-white/50 backdrop-blur-sm p-6 border-b border-orange-100/50">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
                 
-                <div class="mt-6 text-center">
-                    <p class="text-blue-900 text-xl font-semibold italic">
-                        {{ $tingkatan->nama_tingkatan }}: {{ $videos->first()->judul_video ?? 'Video Pembelajaran' }}
-                    </p>
+                {{-- Judul Halaman --}}
+                <h1 class="text-3xl font-bold text-indigo-900 flex items-center gap-3">
+                    <img src="{{ asset('images/icon/bintang.webp') }}" class="w-10 h-10 animate-spin-slow" alt="star">
+                    <span>Iqra Jilid {{ $tingkatan->level }}</span>
+                    <img src="{{ asset('images/icon/bintang.webp') }}" class="w-10 h-10 animate-spin-slow" alt="star">
+                </h1>
+
+                {{-- TOMBOL TAB NAVIGASI --}}
+                <div class="bg-white p-1.5 rounded-full shadow-lg border border-orange-100 inline-flex">
+                    <button onclick="switchTab('video')" 
+                            id="tab-video" 
+                            class="px-8 py-3 rounded-full font-bold text-lg transition-all duration-300 flex items-center gap-2 text-pink-500 hover:bg-gray-50 hover:text-white-500">
+                        <!-- <img src="{{ asset('images/icon/broadcast.webp') }}" class="w-6 h-6 grayscale opacity-60" alt="icon"> -->
+                        Video
+                    </button>
+                    <button onclick="switchTab('materi')" 
+                            id="tab-materi" 
+                            class="px-8 py-3 rounded-full font-bold text-lg transition-all duration-300 flex items-center gap-2 shadow-md transform hover:-translate-y-0.5 bg-white-500 text-pink-500">
+                        <!-- <img src="{{ asset('images/icon/blok-huruf.webp') }}" class="w-6 h-6" alt="icon"> -->
+                        Materi
+                    </button>
                 </div>
             </div>
         </div>
-        
-        <!-- Materi Tab Content -->
-        <div id="content-materi" class="tab-content hidden">
-            <div class="bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-3xl p-12 shadow-2xl border-4 border-white">
-                <div class="flex items-center justify-center gap-8">
-                    <!-- Previous Button -->
-                    <button onclick="navigateMateri('prev')" 
-                            id="btn-prev" 
-                            class="bg-blue-400 hover:bg-blue-500 text-white rounded-full w-16 h-16 flex items-center justify-center text-3xl font-bold transition-all duration-300 hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed">
-                        ⬅️
+
+        {{-- CONTENT AREA --}}
+        <div class="flex-1 p-6 md:p-10 overflow-y-auto relative">
+            
+            {{-- ========================================== --}}
+            {{-- 1. KONTEN MATERI (CAROUSEL STATIC)       --}}
+            {{-- ========================================== --}}
+            <div id="content-materi" class="tab-content h-full flex flex-col justify-center items-center transition-opacity duration-500">
+                
+                {{-- Container Galeri --}}
+                <div class="w-full max-w-4xl flex items-center justify-between gap-4 md:gap-12">
+                    
+                    {{-- Tombol PREV (Mirror) --}}
+                    <button onclick="prevMateri()" class="group relative z-20 p-4 transition-transform hover:scale-110 focus:outline-none">
+                        <div class="absolute inset-0 bg-white rounded-full shadow-lg opacity-70 group-hover:opacity-100 transition-opacity"></div>
+                        <img src="{{ asset('images/icon/next.webp') }}" 
+                             class="w-12 h-12 md:w-16 md:h-16 relative z-10 transform rotate-180 opacity-80 group-hover:opacity-100 filter drop-shadow-sm" 
+                             alt="Previous">
                     </button>
-                    
-                    <!-- Small Preview Left -->
-                    <div id="preview-prev" class="w-24 h-32 bg-pink-200 rounded-xl flex items-center justify-center opacity-50">
-                        <span class="text-3xl" id="preview-prev-text"></span>
-                    </div>
-                    
-                    <!-- Main Card -->
-                    <div class="flex-1 max-w-md">
-                        <div class="bg-white rounded-3xl overflow-hidden shadow-xl">
-                            <!-- Huruf Display -->
-                            <div class="bg-gradient-to-br from-pink-200 to-pink-100 p-16 flex items-center justify-center" style="min-height: 300px;">
-                                <div class="text-center">
-                                    <div class="text-9xl mb-4" id="huruf-hijaiyah">
-                                        @if($firstMateri && $firstMateri->moduls->first())
-                                            {{ $firstMateri->moduls->first()->teks_latin ?? 'ا' }}
-                                        @else
-                                            ا
-                                        @endif
-                                    </div>
+
+                    {{-- Kartu Materi Tengah --}}
+                    <div class="flex-1 relative group perspective-1000">
+                        {{-- Background Decor --}}
+                        <div class="absolute inset-0 bg-gradient-to-b from-white to-indigo-50 rounded-[2.5rem] shadow-xl transform rotate-1 scale-95 opacity-60 transition-transform duration-500 group-hover:rotate-2"></div>
+                        
+                        {{-- Main Card --}}
+                        <div id="materi-card" class="relative bg-white rounded-[2.5rem] shadow-2xl border-4 border-white p-8 md:p-12 text-center transform transition-all duration-500">
+                            
+                            {{-- Image Container --}}
+                            <div class="relative h-48 md:h-64 flex items-center justify-center mb-6">
+                                {{-- Glow Effect --}}
+                                <div class="absolute w-40 h-40 bg-yellow-200 rounded-full blur-2xl opacity-30 animate-pulse"></div>
+                                
+                                <img id="materi-image" 
+                                     src="" 
+                                     class="h-full w-auto object-contain drop-shadow-2xl relative z-10 transition-transform duration-500" 
+                                     alt="Huruf Hijaiyah"
+                                     onerror="handleImageError(this)">
+                                     
+                                <div id="materi-fallback" class="hidden text-8xl font-arabic text-indigo-600 font-bold">?</div>
+                            </div>
+
+                            {{-- Text Info --}}
+                            <div class="space-y-2">
+                                <h2 id="materi-title" class="text-6xl md:text-7xl font-bold text-indigo-900 font-comic tracking-wide mb-2">
+                                    </h2>
+                                <div class="inline-block bg-indigo-100 px-4 py-2 rounded-xl">
+                                    <p id="materi-desc" class="text-indigo-600 font-medium text-lg">
+                                        </p>
                                 </div>
                             </div>
-                            
-                            <!-- Name Label -->
-                            <div class="bg-gradient-to-r from-pink-400 to-pink-500 text-white text-center py-4">
-                                <p class="text-3xl font-bold" id="nama-huruf">
-                                    @if($firstMateri)
-                                        {{ $firstMateri->judul_materi }}
-                                    @else
-                                        Alif
-                                    @endif
-                                </p>
+
+                            {{-- Counter Badge --}}
+                            <div class="absolute top-6 right-6 bg-gray-100 px-3 py-1 rounded-full text-sm font-bold text-gray-500 border border-gray-200">
+                                <span id="materi-counter">1/1</span>
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Small Preview Right -->
-                    <div id="preview-next" class="w-24 h-32 bg-pink-200 rounded-xl flex items-center justify-center opacity-50">
-                        <span class="text-3xl" id="preview-next-text"></span>
-                    </div>
-                    
-                    <!-- Next Button -->
-                    <button onclick="navigateMateri('next')" 
-                            id="btn-next" 
-                            class="bg-blue-400 hover:bg-blue-500 text-white rounded-full w-16 h-16 flex items-center justify-center text-3xl font-bold transition-all duration-300 hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed">
-                        ➡️
+
+                    {{-- Tombol NEXT --}}
+                    <button onclick="nextMateri()" class="group relative z-20 p-4 transition-transform hover:scale-110 focus:outline-none">
+                        <div class="absolute inset-0 bg-white rounded-full shadow-lg opacity-70 group-hover:opacity-100 transition-opacity"></div>
+                        <img src="{{ asset('images/icon/next.webp') }}" 
+                             class="w-12 h-12 md:w-16 md:h-16 relative z-10 opacity-80 group-hover:opacity-100 filter drop-shadow-sm" 
+                             alt="Next">
                     </button>
                 </div>
-                
-                <!-- Progress Counter -->
-                <div class="mt-8 text-center">
-                    <div class="bg-pink-300 inline-block px-6 py-2 rounded-full">
-                        <span class="text-2xl font-bold text-pink-700" id="progress-counter">
-                            1/{{ $tingkatan->materiPembelajarans->count() ?? 28 }}
-                        </span>
+            </div>
+
+
+            {{-- ========================================== --}}
+            {{-- 2. KONTEN VIDEO (DATA DARI DATABASE)     --}}
+            {{-- ========================================== --}}
+            <div id="content-video" class="tab-content hidden h-full">
+                <div class="flex flex-col lg:flex-row gap-8 h-full">
+                    
+                    {{-- KIRI: Main Player --}}
+                    <div class="w-full lg:w-2/3 flex flex-col gap-4">
+                        <div class="bg-black rounded-3xl overflow-hidden shadow-lg aspect-video border-4 border-white ring-1 ring-gray-200 relative">
+                            @if($videos->count() > 0)
+                                <iframe id="main-video-player"
+                                        class="w-full h-full"
+                                        src="{{ $videos->first()->url_video }}" 
+                                        title="Video Player"
+                                        frameborder="0" 
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                        allowfullscreen>
+                                </iframe>
+                            @else
+                                <div class="absolute inset-0 flex flex-col items-center justify-center text-white bg-gray-800">
+                                    <img src="{{ asset('images/maskot/bawa-hp.webp') }}" class="w-24 opacity-50 mb-4" alt="Empty">
+                                    <p>Belum ada video tersedia.</p>
+                                </div>
+                            @endif
+                        </div>
+                        
+                        {{-- Info Video Aktif --}}
+                        <div class="bg-white p-6 rounded-3xl shadow-sm border border-indigo-50">
+                            @if($videos->count() > 0)
+                                <h2 id="main-video-title" class="text-2xl font-bold text-gray-800 mb-2">{{ $videos->first()->judul_video }}</h2>
+                                <p id="main-video-desc" class="text-gray-600 leading-relaxed">{{ $videos->first()->deskripsi }}</p>
+                            @endif
+                        </div>
+                    </div>
+
+                    {{-- KANAN: Playlist --}}
+                    <div class="w-full lg:w-1/3 flex flex-col h-full">
+                        <div class="bg-white rounded-3xl p-5 shadow-md border border-indigo-50 h-full max-h-[600px] flex flex-col">
+                            <h3 class="font-bold text-lg text-indigo-900 mb-4 flex items-center gap-2 pb-3 border-b border-gray-100">
+                                <span class="bg-red-100 text-red-500 p-1.5 rounded-lg">▶</span>
+                                Daftar Putar
+                            </h3>
+                            
+                            <div class="overflow-y-auto flex-1 pr-2 custom-scrollbar space-y-3">
+                                @forelse($videos as $video)
+                                    <div onclick="changeVideo('{{ $video->url_video }}', '{{ $video->judul_video }}', '{{ $video->deskripsi }}')" 
+                                         class="group flex gap-3 p-2 rounded-2xl hover:bg-indigo-50 cursor-pointer transition-colors border border-transparent hover:border-indigo-100">
+                                        
+                                        <div class="w-32 h-20 bg-gray-200 rounded-xl flex-shrink-0 overflow-hidden relative">
+                                            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-all z-10"></div>
+                                            <iframe class="w-full h-full pointer-events-none" src="{{ $video->url_video }}?controls=0" tabindex="-1"></iframe>
+                                        </div>
+                                        
+                                        <div class="flex flex-col justify-center flex-1 min-w-0">
+                                            <h4 class="font-bold text-gray-800 text-sm line-clamp-2 group-hover:text-indigo-600 transition-colors">
+                                                {{ $video->judul_video }}
+                                            </h4>
+                                            <p class="text-xs text-gray-400 mt-1 flex items-center gap-1">
+                                                Putar Video
+                                            </p>
+                                        </div>
+                                    </div>
+                                @empty
+                                    <div class="text-center py-10">
+                                        <p class="text-gray-400 text-sm">Tidak ada video.</p>
+                                    </div>
+                                @endforelse
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
-        
     </div>
 </div>
 
-@push('scripts')
+<footer class="w-full mt-12">
+        <img src="/images/games/game-footer.webp" alt="Footer Hiasan" class="w-full object-cover">
+</footer>
+
 <script>
-    const tingkatanId = {{ $tingkatan->tingkatan_id }};
-    let currentMateriIndex = 0;
-    let materis = [];
-    
-    // Load initial materis data
-    async function loadMateris() {
-        try {
-            const response = await fetch(`/murid/modul/${tingkatanId}/materi/{{ $firstMateri->materi_id ?? 1 }}`);
-            const data = await response.json();
+    // === DATA STATIC MATERI (DI LOAD LANGSUNG DI SINI) ===
+    // Nama file disesuaikan persis dengan yang ada di folder public/images/hijaiyah/
+    const staticMateriData = [
+        { judul: 'Alif', desc: 'Huruf Alif', file: 'alif.webp' },
+        { judul: 'Ba', desc: 'Huruf Ba', file: 'ba.webp' },
+        { judul: 'Ta', desc: 'Huruf Ta', file: 'ta.webp' },
+        { judul: 'Tsa', desc: 'Huruf Tsa', file: 'tsa.webp' },
+        { judul: 'Jim', desc: 'Huruf Jim', file: 'jim.webp' },
+        { judul: 'Kha', desc: 'Huruf Kha', file: 'Kha.webp' }, // Kapital H sesuai aset
+        { judul: 'Kho', desc: 'Huruf Kho', file: 'kho.webp' },
+        { judul: 'Dal', desc: 'Huruf Dal', file: 'dal.webp' },
+        { judul: 'Dzal', desc: 'Huruf Dzal', file: 'dzal.webp' },
+        { judul: 'Ra', desc: 'Huruf Ra', file: 'ra.webp' },
+        { judul: 'Zai', desc: 'Huruf Zai', file: 'Zayn.webp' }, // Sesuai aset Zayn.webp
+        { judul: 'Sin', desc: 'Huruf Sin', file: 'sin.webp' },
+        { judul: 'Syin', desc: 'Huruf Syin', file: 'syin.webp' },
+        { judul: 'Shad', desc: 'Huruf Shad', file: 'Sad.webp' }, // Sesuai aset Sad.webp
+        { judul: 'Dhad', desc: 'Huruf Dhad', file: 'Dhad.webp' }, // Sesuai aset Dhad.webp
+        { judul: 'Tha', desc: 'Huruf Tha', file: 'Tha.webp' }, // Sesuai aset Tha.webp
+        { judul: 'Zha', desc: 'Huruf Zha', file: 'Zha.webp' }, // Sesuai aset Zha.webp
+        { judul: 'Ain', desc: 'Huruf Ain', file: 'ain.webp' },
+        { judul: 'Ghain', desc: 'Huruf Ghain', file: 'Ghain.webp' }, // Sesuai aset Ghain.webp
+        { judul: 'Fa', desc: 'Huruf Fa', file: 'fa.webp' },
+        { judul: 'Qaf', desc: 'Huruf Qaf', file: 'Qaf.webp' }, // Sesuai aset Qaf.webp
+        { judul: 'Kaf', desc: 'Huruf Kaf', file: 'kaf.webp' },
+        { judul: 'Lam', desc: 'Huruf Lam', file: 'lam.webp' },
+        { judul: 'Mim', desc: 'Huruf Mim', file: 'mim.webp' },
+        { judul: 'Nun', desc: 'Huruf Nun', file: 'nun.webp' },
+        { judul: 'Waw', desc: 'Huruf Waw', file: 'Waw.webp' }, // Sesuai aset Waw.webp
+        { judul: 'Ha', desc: 'Huruf Ha', file: 'Ha.webp' }, // Sesuai aset
+        { judul: 'Lam Alif', desc: 'Huruf Lam Alif', file: 'Lamalif.webp' }, // Sesuai aset
+        { judul: 'Hamzah', desc: 'Huruf Hamzah', file: 'hamzah.webp' },
+        { judul: 'Ya', desc: 'Huruf Ya', file: 'ya.webp' }
+    ];
+
+    let currentIndex = 0;
+
+    // === 1. LOGIKA TAB ===
+    function switchTab(tabName) {
+        const contentMateri = document.getElementById('content-materi');
+        const contentVideo = document.getElementById('content-video');
+        const btnMateri = document.getElementById('tab-materi');
+        const btnVideo = document.getElementById('tab-video');
+
+        const activeClasses = ['bg-indigo-500', 'text-white', 'shadow-md'];
+        const inactiveClasses = ['text-gray-500', 'hover:bg-gray-50', 'hover:text-indigo-500'];
+
+        if (tabName === 'materi') {
+            contentMateri.classList.remove('hidden');
+            contentVideo.classList.add('hidden');
             
-            // Store data for navigation
-            window.currentMateriData = data;
-            updateMateriDisplay(data);
-        } catch (error) {
-            console.error('Error loading materis:', error);
-        }
-    }
-    
-    function updateMateriDisplay(data) {
-        // Update main card
-        document.getElementById('huruf-hijaiyah').textContent = data.materi.moduls[0]?.teks_latin || 'ا';
-        document.getElementById('nama-huruf').textContent = data.materi.judul_materi;
-        
-        // Update progress
-        document.getElementById('progress-counter').textContent = `${data.current}/${data.total}`;
-        
-        // Update previews
-        if (data.prev) {
-            document.getElementById('preview-prev-text').textContent = data.prev.moduls[0]?.teks_latin || '';
-            document.getElementById('btn-prev').disabled = false;
+            btnMateri.classList.add(...activeClasses);
+            btnMateri.classList.remove(...inactiveClasses);
+            btnVideo.classList.remove(...activeClasses);
+            btnVideo.classList.add(...inactiveClasses);
+            
+            btnMateri.querySelector('img').classList.remove('grayscale', 'opacity-60');
+            btnVideo.querySelector('img').classList.add('grayscale', 'opacity-60');
+
+            updateMateriDisplay();
         } else {
-            document.getElementById('preview-prev-text').textContent = '';
-            document.getElementById('btn-prev').disabled = true;
-        }
-        
-        if (data.next) {
-            document.getElementById('preview-next-text').textContent = data.next.moduls[0]?.teks_latin || '';
-            document.getElementById('btn-next').disabled = false;
-        } else {
-            document.getElementById('preview-next-text').textContent = '';
-            document.getElementById('btn-next').disabled = true;
+            contentMateri.classList.add('hidden');
+            contentVideo.classList.remove('hidden');
+            
+            btnVideo.classList.add(...activeClasses);
+            btnVideo.classList.remove(...inactiveClasses);
+            btnMateri.classList.remove(...activeClasses);
+            btnMateri.classList.add(...inactiveClasses);
+            
+            btnVideo.querySelector('img').classList.remove('grayscale', 'opacity-60');
+            btnMateri.querySelector('img').classList.add('grayscale', 'opacity-60');
         }
     }
-    
-    async function navigateMateri(direction) {
-        const data = window.currentMateriData;
-        let targetMateriId;
+
+    // === 2. LOGIKA MATERI CAROUSEL (STATIC) ===
+    function updateMateriDisplay() {
+        const materi = staticMateriData[currentIndex];
+        const card = document.getElementById('materi-card');
+        const imgEl = document.getElementById('materi-image');
+        const fallbackEl = document.getElementById('materi-fallback');
         
-        if (direction === 'prev' && data.prev) {
-            targetMateriId = data.prev.materi_id;
-        } else if (direction === 'next' && data.next) {
-            targetMateriId = data.next.materi_id;
-        } else {
-            return;
-        }
-        
-        try {
-            const response = await fetch(`/murid/modul/${tingkatanId}/materi/${targetMateriId}`);
-            const newData = await response.json();
-            window.currentMateriData = newData;
-            updateMateriDisplay(newData);
+        // Animasi
+        card.classList.add('opacity-50', 'scale-95');
+
+        setTimeout(() => {
+            // Update Teks
+            document.getElementById('materi-title').innerText = materi.judul;
+            document.getElementById('materi-desc').innerText = materi.desc;
+            document.getElementById('materi-counter').innerText = `${currentIndex + 1} / ${staticMateriData.length}`;
             
-            // Save progress
-            if (newData.materi.moduls[0]) {
-                saveProgress(newData.materi.moduls[0].modul_id);
-            }
-        } catch (error) {
-            console.error('Error navigating materi:', error);
+            // Update Gambar
+            const imagePath = `{{ asset('images/hijaiyah/') }}/${materi.file}`;
+            
+            // Reset state gambar
+            imgEl.style.display = 'block';
+            fallbackEl.style.display = 'none';
+            imgEl.src = imagePath;
+            
+            // Update Fallback Text kalau gambar ga ketemu
+            fallbackEl.innerText = materi.judul;
+
+            card.classList.remove('opacity-50', 'scale-95');
+        }, 200);
+    }
+
+    function handleImageError(img) {
+        img.style.display = 'none';
+        document.getElementById('materi-fallback').style.display = 'block';
+    }
+
+    function nextMateri() {
+        currentIndex = (currentIndex + 1) % staticMateriData.length;
+        updateMateriDisplay();
+    }
+
+    function prevMateri() {
+        currentIndex = (currentIndex - 1 + staticMateriData.length) % staticMateriData.length;
+        updateMateriDisplay();
+    }
+
+    // === 3. LOGIKA VIDEO ===
+    function changeVideo(url, title, desc) {
+        document.getElementById('main-video-player').src = url;
+        document.getElementById('main-video-title').innerText = title;
+        document.getElementById('main-video-desc').innerText = desc;
+        if(window.innerWidth < 1024) {
+            document.getElementById('main-video-player').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     }
-    
-    async function saveProgress(modulId) {
-        try {
-            await fetchAPI('/murid/modul/progress', {
-                method: 'POST',
-                body: JSON.stringify({ modul_id: modulId })
-            });
-        } catch (error) {
-            console.error('Error saving progress:', error);
-        }
-    }
-    
-    function switchTab(tab) {
-        const videoTab = document.getElementById('tab-video');
-        const materiTab = document.getElementById('tab-materi');
-        const videoContent = document.getElementById('content-video');
-        const materiContent = document.getElementById('content-materi');
-        
-        if (tab === 'video') {
-            videoTab.classList.add('bg-pink-400', 'text-white');
-            videoTab.classList.remove('text-pink-400');
-            materiTab.classList.remove('bg-yellow-200', 'text-pink-700');
-            materiTab.classList.add('text-pink-400');
-            
-            videoContent.classList.remove('hidden');
-            materiContent.classList.add('hidden');
-        } else {
-            materiTab.classList.add('bg-yellow-200', 'text-pink-700');
-            materiTab.classList.remove('text-pink-400');
-            videoTab.classList.remove('bg-pink-400', 'text-white');
-            videoTab.classList.add('text-pink-400');
-            
-            materiContent.classList.remove('hidden');
-            videoContent.classList.add('hidden');
-            
-            // Load materis if not loaded yet
-            if (!window.currentMateriData) {
-                loadMateris();
-            }
-        }
-    }
-    
-    function loadVideo(index) {
-        const videoItems = document.querySelectorAll('.video-item');
-        const videoPlayer = document.getElementById('video-player');
-        
-        if (videoItems[index]) {
-            const videoSrc = videoItems[index].getAttribute('data-video-src');
-            const subtitleSrc = videoItems[index].getAttribute('data-subtitle-src');
-            
-            videoPlayer.src = videoSrc;
-            if (subtitleSrc) {
-                videoPlayer.querySelector('track').src = subtitleSrc;
-            }
-            videoPlayer.load();
-            videoPlayer.play();
-        }
-    }
-    
-    // Initialize
-    document.addEventListener('DOMContentLoaded', function() {
-        switchTab('video'); // Default to video tab
-        sessionStorage.setItem('current_tingkatan_id', tingkatanId);
+
+    document.addEventListener('DOMContentLoaded', () => {
+        switchTab('video');
+        // document.addEventListener('keydown', (e) => {
+        //     if (!document.getElementById('content-materi').classList.contains('hidden')) {
+        //         if (e.key === 'ArrowRight') nextMateri();
+        //         if (e.key === 'ArrowLeft') prevMateri();
+        //     }
+        // });
     });
 </script>
 
 <style>
-    .tab-button {
-        transition: all 0.3s ease;
+    .font-comic { font-family: 'Comic Sans MS', 'Comic Sans', cursive; }
+    .font-arabic { font-family: 'Amiri', serif; }
+    @keyframes spin-slow {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
     }
-    
-    #tab-video.bg-pink-400 {
-        background: linear-gradient(135deg, #FF6B9D 0%, #E85A8B 100%);
-    }
-    
-    #tab-materi.bg-yellow-200 {
-        background: linear-gradient(135deg, #FDE68A 0%, #FCD34D 100%);
-        font-weight: 700;
-    }
+    .animate-spin-slow { animation: spin-slow 10s linear infinite; }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
 </style>
-@endpush
-
 @endsection
