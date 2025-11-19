@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Tracing Huruf Hijaiyah - IQRain</title>
     <link rel="stylesheet" href="{{ asset('css/game-tracing.css') }}">
 </head>
@@ -58,6 +59,25 @@
                 </div>
             </div>
 
+            <h2 id="final-score" class="text-2xl font-bold mt-4" style="display:none;">Skor Akhir: 0</h2>
+            {{-- Tombol untuk menyimpan skor (muncul setelah game selesai) --}}
+            {{-- PENTING: data-tingkatan-id harus diisi dari controller --}}
+            <!-- <button id="save-score-btn" 
+                    class="btn bg-indigo-500 hover:bg-indigo-600 text-white mt-4"
+                    data-tingkatan-id="{{ $tingkatan->tingkatan_id ?? 0 }}" {{-- Pastikan $tingkatan tersedia dari controller tracing() --}}
+                    style="display:none;" 
+                    onclick="saveTracingScore()">
+                Simpan Skor
+            </button> -->
+
+            {{-- Tombol kembali ke menu --}}
+            <a href="{{ route('murid.games.index', ['tingkatan_id' => $tingkatan->tingkatan_id ?? 0]) }}" 
+            class="btn bg-gray-500 hover:bg-gray-600 text-white mt-4 ml-2" 
+            style="display:none;" 
+            id="back-to-menu-btn">
+                Kembali ke Menu Game
+            </a>
+
         </div>
 
         <!-- Progress Footer -->
@@ -82,43 +102,64 @@
             </div>
         </div>
 
-        <button id="finish-button" class="btn btn-success" style="display:none;">Selesai & Simpan Skor</button>
-        
+        <!-- <button id="finish-button" class="btn btn-success" style="display:none;">Selesai & Simpan Skor</button> -->
     </div>
 
     <!-- Success Modal (Hidden by default) -->
-    <div id="success-modal" class="success-modal">
+    <div id="success-modal" class="success-modal" style="display:none;">
         <div class="success-container">
             <div class="success-animation">🎉</div>
             <h2 class="success-title">Hebat!</h2>
             <div id="final-stars" class="final-stars">⭐⭐⭐</div>
             <p id="success-message" class="success-message">Kamu menulis huruf dengan sangat baik!</p>
-            <p id="final-score" class="final-score">Akurasi: 0%</p>
+            
+            {{-- REVISI MINOR: Akurasi akan diisi oleh JavaScript --}}
+            <p id="final-accuracy" class="final-score">Akurasi: 0%</p> 
+            
+            {{-- Pesan status penyimpanan skor --}}
+            <p id="save-status" class="text-sm mt-2 text-yellow-600">Menyimpan skor...</p> 
+
             <div class="success-buttons">
-                <button id="try-again-button" class="btn btn-secondary">Coba Lagi</button>
-                <button id="next-letter-button" class="btn btn-primary">Huruf Berikutnya</button>
+                {{-- Tombol "Coba Lagi" / "Kembali" --}}
+                {{-- Tombol ini dinonaktifkan sementara skor sedang diproses --}}
+                <button id="back-to-menu-button" 
+                        class="btn btn-secondary"
+                        data-tingkatan-id="{{ $tingkatan->tingkatan_id ?? 0 }}"
+                        onclick="window.location.href = '{{ route('murid.games.index', ['tingkatan_id' => $tingkatan->tingkatan_id ?? 0]) }}'"
+                        disabled>
+                    Selesai & Kembali
+                </button>
             </div>
         </div>
     </div>
 
-    <div id="score-modal" class="modal d-none">
+    <!-- <div id="score-modal" class="modal d-none">
         <div class="modal-content">
             <h4>Skor tracing berhasil disimpan!</h4>
             <p id="modal-skor"></p>
             <p id="modal-total"></p>
             <button onclick="closeScoreModal()">Lanjut</button>
         </div>
-    </div>
+    </div> -->
 
     <script>
-    function showScoreModal(skor, aggregate) {
-        document.getElementById('modal-skor').textContent = "Skor Huruf: " + skor + "/100";
-        document.getElementById('modal-total').textContent = "Total Leaderboard: " + aggregate + "/100";
-        document.getElementById('score-modal').classList.remove('d-none');
-    }
-    function closeScoreModal() {
-        document.getElementById('score-modal').classList.add('d-none');
-    }
+        // Variabel global yang akan diisi oleh logika game Anda
+        window.gameFinalScore = 0; // Skor yang akan masuk ke DB (misalnya, total poin)
+        window.gameAccuracyPercentage = 0; // Akurasi (0-100) untuk tampilan
+
+        // PENTING: Fungsi ini HARUS dipanggil oleh logika game tracing Anda 
+        // saat tracing selesai.
+        function showGameResults(finalScore, accuracyPercentage) {
+            window.gameFinalScore = finalScore; 
+            window.gameAccuracyPercentage = accuracyPercentage;
+            
+            // 1. Update Tampilan Modal
+            document.getElementById('final-accuracy').innerText = `Akurasi: ${accuracyPercentage}%`; 
+            document.getElementById('success-modal').style.display = 'flex'; 
+            
+            // 2. Langsung Panggil Fungsi Penyimpanan Skor
+            saveTracingScore(); // Didefinisikan di game-tracing.js
+        }
     </script>
 
 

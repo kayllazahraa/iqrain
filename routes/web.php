@@ -113,6 +113,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::get('/games/{tingkatan_id}', [GameController::class, 'index'])->name('games.index');
         Route::get('/games/{tingkatan_id}/memory-card', [GameController::class, 'memoryCard'])->name('games.memory-card');
         Route::get('/games/{tingkatan_id}/tracing', [GameController::class, 'tracingStandalone'])->name('games.tracing');
+        Route::post('/murid/games/{tingkatan_id}/tracing/save', [GameController::class, 'storeTracingScore'])
+        ->name('murid.games.tracing.save');
         Route::get('/games/{tingkatan_id}/labirin', [GameController::class, 'labirin'])->name('games.labirin');
         Route::get('/games/{tingkatan_id}/drag-drop', [GameController::class, 'dragDrop'])->name('games.drag-drop');
         Route::post('/games/save-score', [GameController::class, 'saveScore'])->name('games.save-score');
