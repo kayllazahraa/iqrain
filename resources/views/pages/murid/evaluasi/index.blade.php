@@ -5,7 +5,7 @@
 @section('content')
 <div class="container mx-auto px-4 py-8">
     <div class="max-w-5xl mx-auto">
-        
+                
         {{-- HEADER SECTION --}}
             <div class="container mx-auto px-4 mt-8 mb-12">
                 <div class="flex flex-col-reverse md:flex-row items-center justify-center gap-4 md:gap-12 max-w-6xl mx-auto">

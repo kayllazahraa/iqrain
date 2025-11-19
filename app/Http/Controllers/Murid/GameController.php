@@ -49,12 +49,9 @@ class GameController extends Controller
     // ==================================================================
     public function labirin($tingkatan_id)
     {
-        $tingkatan = TingkatanIqra::findOrFail($tingkatan_id);
-        $gameStatic = GameStatic::where('tingkatan_id', $tingkatan_id)
-            ->whereHas('jenisGame', function ($q) {
-                $q->where('nama_game', 'Labirin');
-            })->first();
-
+        $tingkatan = TingkatanIqra::with('materiPembelajarans')->findOrFail($tingkatan_id);
+        $jenisGame = JenisGame::where('nama_game', 'Labirin')->firstOrFail();
+        
         // 1. Definisikan 3 map labirin (ukuran 8 baris x 9 kolom)
         $maps = [
             // Map 1
@@ -107,7 +104,7 @@ class GameController extends Controller
             'د' => 'Dal.webp',
             'ذ' => 'Dzal.webp',
             'ر' => 'Ra.webp',
-            'ز' => 'Zai.webp',
+            'ز' => 'Za.webp',
             'س' => 'Sin.webp',
             'ش' => 'Syin.webp',
             'ص' => 'Shod.webp',
@@ -144,7 +141,7 @@ class GameController extends Controller
         // 6. Kirim data ke View Blade
         return view('pages.murid.games.labirin', [
             'tingkatan' => $tingkatan,
-            'gameStatic' => $gameStatic,
+            'jenisGame'=>$jenisGame,
             'mapLayout' => $selectedMap,
             'targetLetters' => $targetNames,
             'targetFiles' => $targetFiles,

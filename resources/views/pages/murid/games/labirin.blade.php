@@ -217,20 +217,20 @@
             targetLetters: @json($targetLetters),
             targetFiles: @json($targetFiles)
         };
-
-        // ID untuk Database (Null Safe)
-        const gameStaticId = {{ $gameStatic->game_static_id ?? 'null' }};
-        const jenisGameId = {{ $gameStatic->jenis_game_id ?? 'null' }};
+        
+        // const gameStaticId = null; 
+        // Ambil ID langsung dari $jenisGame
+        const jenisGameId = {{ $jenisGame->jenis_game_id }};
 
         // URL Routes
-        const saveScoreUrl = '{{ route('murid.games.save-score') }}';
+        const saveScoreUrl = '{{ route('murid.game.saveScore') }}';
         const redirectUrl = '{{ route('murid.games.index', $tingkatan->tingkatan_id) }}';
 
         // --- 2. FUNGSI SIMPAN SKOR (ASYNC) ---
         async function saveScore(skor, poin) {
             // Cek validitas ID game
-            if (!gameStaticId || !jenisGameId) {
-                console.error("GameStaticID atau JenisGameID hilang. Skor tidak akan disimpan.");
+            if (!jenisGameId) {
+                console.error("JenisGameID hilang. Skor tidak akan disimpan.");
                 alert("Terjadi kesalahan konfigurasi game. Skor tidak tersimpan.");
                 return;
             }
@@ -242,12 +242,10 @@
                     headers: {
                         'Content-Type': 'application/json',
                         // Ambil CSRF Token dari meta tag Laravel
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
-                            'content')
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     },
-                    body: JSON.stringify({
-                        jenis_game_id: jenisGameId,
-                        game_static_id: gameStaticId,
+                    body: JSON.stringify({                        
+                        jenis_game_id: jenisGameId,                      
                         skor: skor,
                         total_poin: poin
                     })
@@ -257,13 +255,9 @@
 
                 // Jika Sukses
                 if (data.success) {
-                    console.log("Skor Berhasil Disimpan!", data);
-
-                    // Tampilkan pesan sukses (bisa diganti modal custom jika mau)
-                    alert("Alhamdulillah! Kamu berhasil menyelesaikan Labirin!\nPoin kamu: " + data.poin_didapat);
-
-                    // Redirect ke halaman menu game
-                    window.location.href = redirectUrl;
+                    console.log("Skor Berhasil Disimpan!", data);                    
+                    alert("Alhamdulillah! Kamu berhasil menyelesaikan Labirin!\nPoin kamu: " + data.poin_didapat);                    
+                    location.reload();
                 } else {
                     console.error("Gagal response:", data);
                     alert("Gagal menyimpan skor.");

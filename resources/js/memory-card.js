@@ -14,13 +14,14 @@ var cardMasterList = [
     { id: "alif", latin: "Alif" },
     { id: "ba", latin: "Ba" },
     { id: "dal", latin: "Dal" },
-    { id: "Dhad", latin: "Dhad" },
+    { id: "Dhlo", latin: "Dlho" },
+    { id: "Dhod", latin: "Dhod" },
     { id: "dzal", latin: "Dzal" },
     { id: "fa", latin: "Fa" },
-    { id: "Ghain", latin: "Ghain" },
+    { id: "Ghoin", latin: "Ghoin" },
     { id: "Ha", latin: "Ha" },
-    { id: "hamzah", latin: "Hamzah" },
 
+    { id: "hamzah", latin: "Hamzah" },
     { id: "jim", latin: "Jim" },
     { id: "kaf", latin: "Kaf" },
     { id: "kha", latin: "Kha" },
@@ -29,20 +30,20 @@ var cardMasterList = [
     { id: "Lamalif", latin: "Lam Alif" },
     { id: "mim", latin: "Mim" },
     { id: "nun", latin: "Nun" },
-    { id: "Qaf", latin: "Qaf" },
-    { id: "ra", latin: "Ra" },
+    { id: "Qof", latin: "Qof" },
 
-    { id: "Sad", latin: "Sad" },
+    { id: "ra", latin: "Ra" },
+    { id: "Shod", latin: "Shod" },
     { id: "sin", latin: "Sin" },
     { id: "syin", latin: "Syin" },
     { id: "ta", latin: "Ta" },
-    { id: "Tha", latin: "Tha" },
+    { id: "Tho", latin: "Tho" },
     { id: "tsa", latin: "Tsa" },
-    { id: "Waw", latin: "Waw" },
+    { id: "Wawu", latin: "Wawu" },
     { id: "ya", latin: "Ya" },
-    { id: "Zayn", latin: "Zain" },
-    { id: "Zha", latin: "Zha" }
+    { id: "Za", latin: "Za" }
 ];
+
 
 var cardSet; 
 
