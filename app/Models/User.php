@@ -61,4 +61,13 @@ class User extends Authenticatable
     {
         return $this->avatar_path ? asset('storage/' . $this->avatar_path) : asset('images/avatar/cowo.webp');
     }
+
+    public function routeNotificationForMail()
+    {
+        if ($this->hasRole('mentor') && $this->mentor) {
+            return $this->mentor->email;
+        }
+        
+        return $this->email; 
+    }
 }

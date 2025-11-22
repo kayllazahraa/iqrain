@@ -27,22 +27,35 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        if (Auth::attempt($request->only('username', 'password'), $request->boolean('remember'))) {
-            $request->session()->regenerate();
+        // 1. CARI USER BERDASARKAN USERNAME
+        $user = User::where('username', $request->username)->first();
 
-            $user = Auth::user();
-
-            // Check if mentor and not approved
-            if ($user->hasRole('mentor') && $user->mentor && $user->mentor->status_approval !== 'approved') {
-                return redirect()->route('auth.pending-approval');
-            }
-
-            return redirect()->intended(route('dashboard'));
+        // 2. JIKA USER TIDAK DITEMUKAN
+        if (!$user) {
+            return back()
+                ->withErrors(['username' => 'Username tidak ditemukan.'])
+                ->withInput();
         }
 
-        throw ValidationException::withMessages([
-            'username' => 'Username atau password salah.',
-        ]);
+        // 3. JIKA PASSWORD SALAH
+        if (!Hash::check($request->password, $user->password)) {
+            return back()
+                ->withErrors(['password' => 'Password yang Anda masukkan salah.'])
+                ->withInput();
+        }
+
+        // 4. JIKA LOLOS, LAKUKAN LOGIN MANUAL
+        Auth::login($user, $request->boolean('remember'));
+        $request->session()->regenerate();
+
+        // Cek Status Mentor (Logika Asli Anda)
+        if ($user->hasRole('mentor') && $user->mentor && $user->mentor->status_approval !== 'approved') {
+            // Catatan: Pastikan route 'auth.pending-approval' benar-benar ada di web.php
+            // Jika di web.php namanya 'register.mentor.pending', ganti route di bawah ini.
+            return redirect()->route('register.mentor.pending'); 
+        }
+
+        return redirect()->intended(route('dashboard'));
     }
 
     public function showRegister()
@@ -79,8 +92,6 @@ class AuthController extends Controller
             } else {
                 $rules['sekolah'] = 'required|string|max:100';
                 $rules['warna_kesukaan'] = 'required|string|max:50';
-                $rules['nama_hewan'] = 'nullable|string|max:50';
-                $rules['kota_lahir'] = 'nullable|string|max:50';
             }
 
             $request->validate($rules);

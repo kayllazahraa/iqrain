@@ -4,68 +4,144 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lupa Password - IQRAIN</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background-color: #ffffff; 
+            position: relative;
+        }
+
+
+        .pattern-bg {
+            position: fixed;
+            inset: 0;
+            background-image: url('images/pattern/pattern1.webp');
+            background-size: 1000px;
+            background-repeat: repeat;
+            opacity: 0.5; 
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .forgot-card-single {
+            background: linear-gradient(135deg, #56B1F3, #D3F2FF); 
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 10;
+        }
+
+        .btn-lanjut {
+            background-color: #FF87AB;
+            transition: all 0.2s ease-in-out;
+            font-weight: 700;
+        }
+        .btn-lanjut:hover {
+            background-color: #E85A8B;
+            transform: translateY(-2px);
+        }
+
+        .alert-pink {
+            background-color: #F7A0B3;
+            color: #3d3d3d;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            border: 1px solid #f08097;
+        }
+
+        /* Menambahkan border merah untuk fokus/error */
+        .input-error {
+            border: 2px solid #ef4444 !important; /* Tailwind red-500 */
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #5CB8E6;
+            box-shadow: 0 0 0 2px #5CB8E6; /* Menggunakan box-shadow untuk fokus yang lebih menonjol */
+        }
+    </style>
 </head>
-<body class="bg-gradient-to-br from-blue-400 to-blue-600 min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8">
-        <div class="text-center mb-8">
-            <div class="w-20 h-20 bg-blue-100 rounded-full mx-auto flex items-center justify-center mb-4">
-                <svg class="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+
+<body class="min-h-screen flex items-center justify-center p-4 relative">
+    
+    <div class="pattern-bg"></div>
+
+    <div class="w-full max-w-md relative z-20">
+        
+        <div class="forgot-card-single p-8 sm:p-10">
+
+            <h2 class="text-3xl font-bold text-gray-800 text-center mb-6">
+                Lupa Password
+            </h2>
+
+            <div class="alert-pink flex items-start mb-6">
+                <svg class="w-6 h-6 mr-3 mt-0.5 text-gray-700" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
                 </svg>
-            </div>
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">Lupa Password?</h1>
-            <p class="text-gray-600 text-sm">Masukkan username kamu untuk reset password</p>
-        </div>
-
-        @if ($errors->any())
-            <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
-                <ul class="list-disc list-inside">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
-                {{ session('error') }}
-            </div>
-        @endif
-
-        <form method="POST" action="{{ route('password.murid.check') }}" class="space-y-6">
-            @csrf
-
-            <div>
-                <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
-                    Username
-                </label>
-                <input 
-                    id="username" 
-                    type="text" 
-                    name="username" 
-                    value="{{ old('username') }}"
-                    required 
-                    autofocus
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Masukkan username kamu"
-                >
+                <p class="text-sm font-medium">
+                    Masukkan username kamu untuk memulai proses pemulihan password.
+                </p>
             </div>
 
-            <button 
-                type="submit"
-                class="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 transform hover:scale-105 shadow-lg"
-            >
-                Lanjut
-            </button>
-        </form>
+            {{-- Menampilkan error non-spesifik (seperti 'Username tidak ditemukan') dan status --}}
+            @if (session('error'))
+                <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                    {{ session('error') }}
+                </div>
+            @endif
 
-        <div class="mt-6 text-center">
-            <a href="{{ route('login') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                ← Kembali ke Login
-            </a>
+            @if (session('status'))
+                <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+                    {{ session('status') }}
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('password.check') }}" class="space-y-6">
+                @csrf
+                <div>
+                    <label for="username" class="block text-base font-bold text-gray-700 mb-2">
+                        Username
+                    </label>
+                    <input 
+                        id="username" 
+                        type="text" 
+                        name="username" 
+                        value="{{ old('username') }}"
+                        required 
+                        autofocus
+                        class="w-full px-5 py-4 border-0 rounded-xl text-gray-800 text-lg {{ $errors->has('username') ? 'input-error' : '' }}"
+                        style="background-color: white;"
+                    >
+                    {{-- Pesan Error Validasi Spesifik untuk Username --}}
+                    @error('username')
+                        <p class="text-red-600 text-sm mt-2 font-semibold">
+                            ⚠️ {{ $message }}
+                        </p>
+                    @enderror
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" class="w-full btn-lanjut text-white font-bold py-3 px-10 rounded-xl shadow-lg text-lg">
+                        Lanjutkan
+                    </button>
+                </div>
+            </form>
+
+            <div class="mt-6 text-center">
+                <a href="{{ route('login') }}" class="text-gray-700 hover:text-iqrain-dark-blue text-sm font-bold underline">
+                    ← Kembali ke Login
+                </a>
+            </div>
+
         </div>
     </div>
+
 </body>
 </html>

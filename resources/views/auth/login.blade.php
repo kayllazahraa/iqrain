@@ -4,38 +4,126 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - IQRAIN</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    <!-- Import font Fredoka -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'iqrain-blue': '#5CB8E6',
+                        'iqrain-pink': '#FF87AB',
+                        'iqrain-dark-blue': '#2C5F7D'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        /* Animasi Loncat */
+        @keyframes bounceMascot {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-25px);
+            }
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url('images/pattern/game-pattern.webp');
+            background-size: 500px;
+            background-repeat: repeat;
+            opacity: 0.4; 
+            z-index: -1; 
+        }
+
+
+        .mascot-bounce {
+            animation: bounceMascot 2s ease-in-out infinite;
+        }
+
+        /* Pattern background untuk sisi kiri */
+        .pattern-bg {
+            background-image: url('images/pattern/wafe-login.webp');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+
+        /* Mascot positioning */
+        .mascot-container {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Login button styling */
+        .btn-login {
+            background-color: #FF87AB;
+            transition: all 0.2s ease-in-out;
+        }
+        .btn-login:hover {
+            background-color: #E85A8B;
+            transform: translateY(-2px);
+        }
+
+        /* Input focus style */
+        input:focus {
+            outline: none;
+            border-color: #5CB8E6;
+            ring: 2px;
+            ring-color: #5CB8E6;
+        }
+    </style>
 </head>
-<body class="bg-gradient-to-br from-blue-400 to-blue-600 min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-5xl flex bg-white rounded-3xl shadow-2xl overflow-hidden">
-        <!-- Left Side - Mascot -->
-        <div class="hidden md:flex md:w-1/2 bg-gradient-to-br from-blue-100 to-white items-center justify-center p-12 relative">
-            <div class="absolute top-0 left-0 w-full h-full opacity-10">
-                <!-- Decorative pattern -->
-                <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                    <pattern id="pattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-                        <circle cx="25" cy="25" r="20" fill="#FF69B4" opacity="0.3"/>
-                        <rect x="60" y="10" width="30" height="30" fill="#FFD700" opacity="0.3" rx="5"/>
-                        <path d="M 10 70 Q 30 50, 50 70" stroke="#87CEEB" stroke-width="4" fill="none" opacity="0.3"/>
-                    </pattern>
-                    <rect width="100%" height="100%" fill="url(#pattern)"/>
-                </svg>
+    <body class="min-h-screen flex items-center justify-center relative bg-[#7CC9EE]">
+    
+    <div class="w-full max-w-6xl flex rounded-3xl shadow-2xl overflow-hidden relative min-h-[600px]">
+
+        <!-- Left Side -->
+        <div class="hidden md:flex md:w-1/2 items-center justify-center relative">
+
+            <!-- Solid Blue Background (di bawah) -->
+            <div class="absolute inset-0 bg-[#5CB8E6]"></div>
+
+            <!-- Pattern (di atas) -->
+            <div class="absolute inset-0 pattern-bg"></div>
+
+            <!-- Mascot Image -->
+            <div class="mascot-container flex items-center justify-center" style="z-index: 10;">
+                <img 
+                    src="images/maskot/ceria.webp" 
+                    alt="Qira Mascot" 
+                    class="w-80 h-auto object-contain mascot-bounce"
+                    onerror="this.style.display='none'"
+                >
             </div>
-            <div class="relative z-10 text-center">
-                <img src="{{ asset('images/qira-mascot.webp') }}" alt="Qira Mascot" class="w-64 h-auto mx-auto mb-4">
-                <h2 class="text-2xl font-bold text-gray-800">Belajar Bersama Qira!</h2>
-            </div>
+
         </div>
 
-        <!-- Right Side - Login Form -->
-        <div class="w-full md:w-1/2 p-12">
-            <div class="text-center mb-8">
-                <h1 class="text-4xl font-bold text-blue-600 mb-2">Selamat Datang!</h1>
-                <div class="flex justify-center space-x-2 mb-4">
-                    <span class="text-3xl">🐘</span>
-                    <span class="text-3xl">📚</span>
-                    <span class="text-3xl">✨</span>
-                </div>
+
+
+        <!-- Right Side - Login Form (Blue Background) -->
+        <div class="w-full md:w-1/2 p-12 relative flex flex-col justify-center" style="background-color: #5CB8E6;">
+            <div class="text-left mb-8">
+                <h1 class="text-5xl font-bold text-white mb-8" style="font-weight: 700;">
+                    Selamat Datang!
+                </h1>
             </div>
 
             <!-- Error Messages -->
@@ -51,22 +139,12 @@
                 </div>
             @endif
 
-            @if ($errors->any())
-                <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
-                    <ul class="list-disc list-inside">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
             <form method="POST" action="{{ route('login') }}" class="space-y-6">
                 @csrf
-
+                
                 <!-- Username -->
                 <div>
-                    <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label for="username" class="block text-lg font-semibold text-white mb-2">
                         Username
                     </label>
                     <input 
@@ -76,14 +154,18 @@
                         value="{{ old('username') }}"
                         required 
                         autofocus
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                        class="w-full px-5 py-4 border-0 rounded-xl text-gray-800 text-lg @error('username') border-2 border-red-500 ring-2 ring-red-500 @enderror"
                         placeholder="Masukkan username"
+                        style="background-color: white;"
                     >
+                    @error('username')
+                        <p class="mt-2 text-sm font-semibold text-red-100">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- Password -->
                 <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label for="password" class="block text-lg font-semibold text-white mb-2">
                         Password
                     </label>
                     <input 
@@ -91,34 +173,42 @@
                         type="password" 
                         name="password" 
                         required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                        class="w-full px-5 py-4 border-0 rounded-xl text-gray-800 text-lg"
                         placeholder="Masukkan password"
+                        style="background-color: white;"
                     >
+                    
                 </div>
 
-                <!-- Forgot Password Link -->
-                <div class="text-right">
-                    <a href="{{ route('password.murid.request') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                <!-- Forgot Password & Login Button -->
+                <div class="flex items-center justify-between pt-4">
+                    <a href="{{ route('password.request') }}" class="text-white hover:text-blue-900 text-base font-semibold underline">
                         Lupa password?
                     </a>
+                    
+                    <button 
+                        type="submit"
+                        class="btn-login text-white font-bold py-3 px-10 rounded-xl shadow-lg text-lg @error('password') border-2 border-red-500 ring-2 ring-red-500 @enderror"
+                    >
+                        Login
+                    </button>
                 </div>
-
-                <!-- Login Button -->
-                <button 
-                    type="submit"
-                    class="w-full bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300 transform hover:scale-105 shadow-lg"
-                >
-                    Login
-                </button>
             </form>
 
-            <!-- Register Links -->
-            <div class="mt-6 pt-6 border-t border-gray-200 text-center">
-                <p class="text-gray-600 mb-3">Belum punya akun? 
-                    <a href="{{ route('register.murid') }}" class="text-blue-600 hover:text-blue-800 font-medium">Daftar di sini</a>
+            <!-- Divider Line -->
+            <div class="mt-8 mb-6 border-t border-white/30"></div>
+
+            <!-- Register Link -->
+            <div class="text-left">
+                <p class="text-white text-base">
+                    Belum punya akun? 
+                    <a href="{{ route('register.murid') }}" class="font-bold underline hover:text-blue-900">
+                        Daftar di sini
+                    </a>
                 </p>
             </div>
         </div>
     </div>
+
 </body>
 </html>

@@ -3,173 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Murid - IQRAIN</title>
+    <title>Buat Akun Baru - IQRAIN</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gradient-to-br from-blue-400 to-blue-600 min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-5xl flex bg-white rounded-3xl shadow-2xl overflow-hidden">
-        <!-- Left Side - Mascot -->
-        <div class="hidden md:flex md:w-1/2 bg-gradient-to-br from-blue-100 to-white items-center justify-center p-12 relative">
-            <div class="absolute top-0 left-0 w-full h-full opacity-10">
-                <!-- Decorative pattern -->
-                <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                    <pattern id="pattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-                        <circle cx="25" cy="25" r="20" fill="#FF69B4" opacity="0.3"/>
-                        <rect x="60" y="10" width="30" height="30" fill="#FFD700" opacity="0.3" rx="5"/>
-                        <path d="M 10 70 Q 30 50, 50 70" stroke="#87CEEB" stroke-width="4" fill="none" opacity="0.3"/>
-                    </pattern>
-                    <rect width="100%" height="100%" fill="url(#pattern)"/>
-                </svg>
-            </div>
-            <div class="relative z-10 text-center">
-                <img src="{{ asset('images/qira-mascot.png') }}" alt="Qira Mascot" class="w-64 h-auto mx-auto mb-4">
-                <h2 class="text-2xl font-bold text-gray-800">Ayo Bergabung!</h2>
-            </div>
-        </div>
 
-        <!-- Right Side - Registration Form -->
-        <div class="w-full md:w-1/2 p-12">
-            <div class="text-center mb-8">
-                <h1 class="text-4xl font-bold text-blue-600 mb-2">Buat Akun Baru</h1>
-                <div class="flex justify-center space-x-2 mb-4">
-                    <span class="text-2xl">😊</span>
-                    <span class="text-2xl">📝</span>
-                    <span class="text-2xl">✨</span>
-                </div>
-                
-                <!-- Progress Indicator -->
-                <div class="flex justify-center items-center space-x-2 mt-4">
-                    <div class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold">1</div>
-                    <div class="w-12 h-1 bg-gray-300"></div>
-                    <div class="w-8 h-8 rounded-full bg-gray-300 text-gray-500 flex items-center justify-center font-bold">2</div>
-                </div>
-                <p class="text-sm text-gray-600 mt-2">Langkah 1 dari 2: Data Akun</p>
+<body class="min-h-screen bg-[var(--color-iqrain-blue)] font-sans">
+
+    <div class="max-w-7xl mx-auto py-10 px-6 relative">
+
+        <div class="lg:w-[calc(100%-500px)] lg:pr-10">
+            
+            <h1 class="text-4xl lg:text-5xl font-titan text-white mb-6"
+                style="text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">
+                Buat Akun Baru
+            </h1>
+
+            <div class="inline-flex rounded-full border-2 border-white p-1 bg-white mb-6">
+                <a href="{{ route('register.murid') }}" 
+                    class="px-10 py-2 rounded-full bg-pink-400 text-white font-semibold text-lg">
+                    Murid
+                </a>
+                <a href="{{ route('register.mentor') }}" 
+                    class="px-10 py-2 rounded-full text-gray-600 font-semibold text-lg">
+                    Mentor
+                </a>
             </div>
 
-            <!-- Role Toggle -->
-            <div class="flex justify-center mb-6">
-                <div class="inline-flex rounded-lg border border-gray-300 p-1">
-                    <a href="{{ route('register.murid') }}" 
-                       class="px-6 py-2 rounded-md bg-pink-400 text-white font-medium">
-                        Murid
-                    </a>
-                    <a href="{{ route('register.mentor') }}" 
-                       class="px-6 py-2 rounded-md text-gray-600 hover:bg-gray-100 font-medium">
-                        Mentor
-                    </a>
-                </div>
+            <div class="flex items-center mb-6 space-x-3">
+                <div class="w-8 h-8 rounded-full bg-yellow-400 text-white flex items-center justify-center font-bold">1</div>
+                <div class="w-3 h-3 rounded-full bg-white opacity-60"></div>
+                <div class="w-3 h-3 rounded-full bg-white opacity-60"></div>
             </div>
 
-            @if ($errors->any())
-                <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
-                    <ul class="list-disc list-inside text-sm">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            <form method="POST" action="{{ route('register.murid.post') }}" class="space-y-4">
+            <form method="POST" action="{{ route('register.murid.post') }}">
                 @csrf
                 <input type="hidden" name="step" value="1">
 
-                <!-- Nama Lengkap -->
-                <div>
-                    <label for="nama_lengkap" class="block text-sm font-medium text-gray-700 mb-2">
-                        Nama Lengkap
-                    </label>
-                    <input 
-                        id="nama_lengkap" 
-                        type="text" 
-                        name="nama_lengkap" 
-                        value="{{ old('nama_lengkap') }}"
-                        required 
-                        autofocus
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Masukkan nama lengkap"
-                    >
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6"> 
+                
+                    <div>
+                        <label class="text-white font-semibold block mb-2">Username</label>
+                        <input type="text"
+                            name="username"
+                            value="{{ old('username') }}"
+                            required
+                            class="w-full px-4 py-3 rounded-xl border-2 {{ $errors->has('username') ? 'border-red-500' : 'border-white' }} bg-white text-gray-800 focus:ring-2 focus:ring-yellow-300"
+                            placeholder="Masukkan username">
+                        {{-- Pesan Error untuk Username --}}
+                        @error('username')
+                            <p class="text-red-300 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                        {{-- Tambahkan petunjuk jika perlu, misal: <p class="text-white text-sm mt-1 opacity-80">Minimal 4 karakter, hanya boleh huruf dan angka.</p> --}}
+                    </div>
+
+                    <div>
+                        <label class="text-white font-semibold block mb-2">Sekolah</label>
+                        <input type="text"
+                            name="sekolah"
+                            value="{{ old('sekolah') }}"
+                            class="w-full px-4 py-3 rounded-xl border-2 border-white bg-white text-gray-800 focus:ring-2 focus:ring-yellow-300"
+                            placeholder="Nama sekolah">
+                        {{-- Sekolah tidak memiliki @error karena dianggap opsional atau validasi sederhana --}}
+                    </div>
+
+                    <div>
+                        <label class="text-white font-semibold block mb-2">Password</label>
+                        <input type="password"
+                            name="password"
+                            required
+                            class="w-full px-4 py-3 rounded-xl border-2 {{ $errors->has('password') ? 'border-red-500' : 'border-white' }} bg-white text-gray-800 focus:ring-2 focus:ring-yellow-300"
+                            placeholder="Masukkan password">
+                        {{-- Pesan Error untuk Password --}}
+                        @error('password')
+                            <p class="text-red-300 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="text-white font-semibold block mb-2">Konfirmasi Password</label>
+                        <input type="password"
+                            name="password_confirmation"
+                            required
+                            class="w-full px-4 py-3 rounded-xl border-2 {{ $errors->has('password_confirmation') ? 'border-red-500' : 'border-white' }} bg-white text-gray-800 focus:ring-2 focus:ring-yellow-300"
+                            placeholder="Ketik ulang password">
+                        {{-- Pesan Error untuk Konfirmasi Password --}}
+                        @error('password_confirmation')
+                            <p class="text-red-300 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                 </div>
 
-                <!-- Username -->
-                <div>
-                    <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
-                        Username
-                    </label>
-                    <input 
-                        id="username" 
-                        type="text" 
-                        name="username" 
-                        value="{{ old('username') }}"
-                        required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Pilih username unik"
-                    >
-                    <p class="text-xs text-gray-500 mt-1">Username hanya boleh huruf, angka, dash (-) dan underscore (_)</p>
+                <div class="mt-6">
+                    <button type="submit"
+                    class="bg-pink-400 text-white font-bold py-3 px-10 rounded-xl shadow-lg hover:bg-pink-500 transition">
+                        Lanjut
+                    </button>
                 </div>
-
-                <!-- Sekolah (Optional) -->
-                <div>
-                    <label for="sekolah" class="block text-sm font-medium text-gray-700 mb-2">
-                        Sekolah (Opsional)
-                    </label>
-                    <input 
-                        id="sekolah" 
-                        type="text" 
-                        name="sekolah" 
-                        value="{{ old('sekolah') }}"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Nama sekolah"
-                    >
-                </div>
-
-                <!-- Password -->
-                <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                        Password
-                    </label>
-                    <input 
-                        id="password" 
-                        type="password" 
-                        name="password" 
-                        required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Minimal 8 karakter"
-                    >
-                </div>
-
-                <!-- Confirm Password -->
-                <div>
-                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">
-                        Konfirmasi Password
-                    </label>
-                    <input 
-                        id="password_confirmation" 
-                        type="password" 
-                        name="password_confirmation" 
-                        required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Ketik ulang password"
-                    >
-                </div>
-
-                <!-- Submit Button -->
-                <button 
-                    type="submit"
-                    class="w-full bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300 transform hover:scale-105 shadow-lg"
-                >
-                    Lanjut
-                </button>
             </form>
 
-            <!-- Login Link -->
-            <div class="mt-6 text-center">
-                <p class="text-gray-600">
+            <div class="border-t border-white mt-10 pt-4">
+                <p class="text-white">
                     Sudah punya akun? 
-                    <a href="{{ route('login') }}" class="text-blue-600 hover:text-blue-800 font-medium">Login di sini</a>
+                    <a href="{{ route('login') }}" class="text-yellow-300 underline">Login di sini</a>
                 </p>
             </div>
         </div>
+
     </div>
+
+    <div class="absolute top-0 right-0 w-[500px] h-full hidden lg:block overflow-hidden">
+        <img src="{{ asset('images/pattern/wafe-regist.webp') }}" 
+            class="h-full object-fill"
+            style="width: 700px; position: absolute; left: 0px;">
+        <img src="{{ asset('images/maskot/ceria.webp') }}" class="absolute bottom-0 right-0 w-[450px]">
+    </div>
+
 </body>
 </html>

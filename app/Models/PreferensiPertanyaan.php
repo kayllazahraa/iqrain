@@ -22,7 +22,7 @@ class PreferensiPertanyaan extends Model
         return $this->belongsTo(Murid::class, 'murid_id', 'murid_id');
     }
 
-    public function verifyAnswers($answer)
+    public function verifyAnswer($answer)
     {
         return strtolower(trim($answer)) === strtolower(trim($this->jawaban));
     }

@@ -6,179 +6,151 @@
     <title>Daftar Mentor - IQRAIN</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gradient-to-br from-blue-400 to-blue-600 min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-5xl flex bg-white rounded-3xl shadow-2xl overflow-hidden">
-        <!-- Left Side - Mascot -->
-        <div class="hidden md:flex md:w-1/2 bg-gradient-to-br from-blue-100 to-white items-center justify-center p-12 relative">
-            <div class="absolute top-0 left-0 w-full h-full opacity-10">
-                <!-- Decorative pattern -->
-                <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                    <pattern id="pattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-                        <circle cx="25" cy="25" r="20" fill="#FF69B4" opacity="0.3"/>
-                        <rect x="60" y="10" width="30" height="30" fill="#FFD700" opacity="0.3" rx="5"/>
-                        <path d="M 10 70 Q 30 50, 50 70" stroke="#87CEEB" stroke-width="4" fill="none" opacity="0.3"/>
-                    </pattern>
-                    <rect width="100%" height="100%" fill="url(#pattern)"/>
-                </svg>
-            </div>
-            <div class="relative z-10 text-center">
-                <img src="{{ asset('images/qira-mascot.png') }}" alt="Qira Mascot" class="w-64 h-auto mx-auto mb-4">
-                <h2 class="text-2xl font-bold text-gray-800">Bergabung sebagai Mentor!</h2>
-            </div>
-        </div>
 
-        <!-- Right Side - Registration Form -->
-        <div class="w-full md:w-1/2 p-12 overflow-y-auto max-h-screen">
-            <div class="text-center mb-8">
-                <h1 class="text-4xl font-bold text-blue-600 mb-2">Buat Akun Baru</h1>
-                <div class="flex justify-center space-x-2 mb-4">
-                    <span class="text-2xl">👨‍🏫</span>
-                    <span class="text-2xl">📚</span>
-                    <span class="text-2xl">✨</span>
-                </div>
+<body class="min-h-screen bg-[var(--color-iqrain-blue)] font-sans">
+
+    <div class="max-w-7xl mx-auto py-8 px-6 relative">
+
+        <div class="lg:w-[calc(100%-500px)] lg:pr-10">
+            
+            <h1 class="text-4xl lg:text-5xl font-titan text-white mb-4"
+                style="text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">
+                Buat Akun Baru
+            </h1>
+
+            <div class="inline-flex rounded-full border-2 border-white p-1 bg-white mb-4">
+                <a href="{{ route('register.murid') }}" 
+                    class="px-8 py-1 rounded-full text-gray-600 font-semibold text-base"> 
+                    Murid
+                </a>
+                <a href="{{ route('register.mentor') }}" 
+                    class="px-8 py-1 rounded-full bg-pink-400 text-white font-semibold text-base">
+                    Mentor
+                </a>
             </div>
 
-            <!-- Role Toggle -->
-            <div class="flex justify-center mb-6">
-                <div class="inline-flex rounded-lg border border-gray-300 p-1">
-                    <a href="{{ route('register.murid') }}" 
-                       class="px-6 py-2 rounded-md text-gray-600 hover:bg-gray-100 font-medium">
-                        Murid
-                    </a>
-                    <a href="{{ route('register.mentor') }}" 
-                       class="px-6 py-2 rounded-md bg-pink-400 text-white font-medium">
-                        Mentor
-                    </a>
-                </div>
-            </div>
-
+            {{-- **BAGIAN INI DIHAPUS** karena error akan ditampilkan per field.
             @if ($errors->any())
-                <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
-                    <ul class="list-disc list-inside text-sm">
+                <div class="mb-4 p-4 bg-red-100 border-l-4 border-red-600 text-red-700 rounded-xl">
+                    <ul class="list-disc ml-5 text-sm">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
                 </div>
             @endif
+            --}}
 
-            <form method="POST" action="{{ route('register.mentor.post') }}" class="space-y-4">
+            <form method="POST" action="{{ route('register.mentor.post') }}">
                 @csrf
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4"> 
+                    
+                    <div class="lg:col-span-2 flex items-center my-2"> 
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        <span class="text-white font-bold text-base">Data Diri</span>
+                    </div>
 
-                <!-- Nama Lengkap -->
-                <div>
-                    <label for="nama_lengkap" class="block text-sm font-medium text-gray-700 mb-2">
-                        Nama Lengkap <span class="text-red-500">*</span>
-                    </label>
-                    <input 
-                        id="nama_lengkap" 
-                        type="text" 
-                        name="nama_lengkap" 
-                        value="{{ old('nama_lengkap') }}"
-                        required 
-                        autofocus
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Masukkan nama lengkap"
-                    >
+                    <div>
+                        <label for="username" class="text-white font-semibold block mb-1 text-sm">Username</label>
+                        <input id="username" type="text" name="username" value="{{ old('username') }}" required
+                            class="w-full px-3 py-2 rounded-lg border-2 {{ $errors->has('username') ? 'border-red-500' : 'border-white' }} bg-white text-gray-800 focus:ring-2 focus:ring-yellow-300"
+                            placeholder="Pilih username unik">
+                        @error('username')
+                            <p class="text-red-300 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                        <p class="text-xs text-white opacity-75 mt-1">Username hanya boleh huruf, angka, dash (-) dan underscore (_)</p>
+                    </div>
+
+                    <div>
+                        <label for="nama_lengkap" class="text-white font-semibold block mb-1 text-sm">Nama Lengkap</label>
+                        <input id="nama_lengkap" type="text" name="nama_lengkap" value="{{ old('nama_lengkap') }}" required autofocus
+                            class="w-full px-3 py-2 rounded-lg border-2 {{ $errors->has('nama_lengkap') ? 'border-red-500' : 'border-white' }} bg-white text-gray-800 focus:ring-2 focus:ring-yellow-300"
+                            placeholder="Masukkan nama lengkap">
+                        @error('nama_lengkap')
+                            <p class="text-red-300 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="no_wa" class="text-white font-semibold block mb-1 text-sm">Nomor WhatsApp</label>
+                        <input id="no_wa" type="tel" name="no_wa" value="{{ old('no_wa') }}" required
+                            class="w-full px-3 py-2 rounded-lg border-2 {{ $errors->has('no_wa') ? 'border-red-500' : 'border-white' }} bg-white text-gray-800 focus:ring-2 focus:ring-yellow-300"
+                            placeholder="08xxxxxxxxxx">
+                        @error('no_wa')
+                            <p class="text-red-300 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="email" class="text-white font-semibold block mb-1 text-sm">Email</label>
+                        <input id="email" type="email" name="email" value="{{ old('email') }}" required
+                            class="w-full px-3 py-2 rounded-lg border-2 {{ $errors->has('email') ? 'border-red-500' : 'border-white' }} bg-white text-gray-800 focus:ring-2 focus:ring-yellow-300"
+                            placeholder="email@example.com">
+                        @error('email')
+                            <p class="text-red-300 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                        <p class="text-xs text-white opacity-75 mt-1">Untuk reset password dan notifikasi</p>
+                    </div>
+
+                    <div class="lg:col-span-2 flex items-center my-2"> 
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                        <span class="text-white font-bold text-base">Keamanan</span>
+                    </div>
+
+                    <div>
+                        <label for="password" class="text-white font-semibold block mb-1 text-sm">Password</label>
+                        <input id="password" type="password" name="password" required
+                            class="w-full px-3 py-2 rounded-lg border-2 {{ $errors->has('password') ? 'border-red-500' : 'border-white' }} bg-white text-gray-800 focus:ring-2 focus:ring-yellow-300"
+                            placeholder="Minimal 8 karakter">
+                        @error('password')
+                            <p class="text-red-300 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                        <p class="text-xs text-white opacity-75 mt-1">Password harus minimal 8 karakter.</p>
+                    </div>
+
+                    <div>
+                        <label for="password_confirmation" class="text-white font-semibold block mb-1 text-sm">Konfirmasi Password</label>
+                        <input id="password_confirmation" type="password" name="password_confirmation" required
+                            class="w-full px-3 py-2 rounded-lg border-2 {{ $errors->has('password_confirmation') ? 'border-red-500' : 'border-white' }} bg-white text-gray-800 focus:ring-2 focus:ring-yellow-300"
+                            placeholder="Ketik ulang password">
+                        @error('password_confirmation')
+                            <p class="text-red-300 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                </div> 
+                
+                <div class="mt-6 flex justify-end">
+                    <button type="submit"
+                        class="bg-pink-400 text-white font-bold py-2.5 px-8 rounded-xl shadow-lg hover:bg-pink-500 transition">
+                        Ajukan Daftar
+                    </button>
                 </div>
 
-                <!-- Username -->
-                <div>
-                    <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
-                        Username <span class="text-red-500">*</span>
-                    </label>
-                    <input 
-                        id="username" 
-                        type="text" 
-                        name="username" 
-                        value="{{ old('username') }}"
-                        required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Pilih username unik"
-                    >
-                    <p class="text-xs text-gray-500 mt-1">Username hanya boleh huruf, angka, dash (-) dan underscore (_)</p>
-                </div>
-
-                <!-- Email -->
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                        Email <span class="text-red-500">*</span>
-                    </label>
-                    <input 
-                        id="email" 
-                        type="email" 
-                        name="email" 
-                        value="{{ old('email') }}"
-                        required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="email@example.com"
-                    >
-                    <p class="text-xs text-gray-500 mt-1">Untuk reset password dan notifikasi</p>
-                </div>
-
-                <!-- No WhatsApp -->
-                <div>
-                    <label for="no_wa" class="block text-sm font-medium text-gray-700 mb-2">
-                        Nomor WhatsApp <span class="text-red-500">*</span>
-                    </label>
-                    <input 
-                        id="no_wa" 
-                        type="tel" 
-                        name="no_wa" 
-                        value="{{ old('no_wa') }}"
-                        required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="08xxxxxxxxxx"
-                    >
-                </div>
-
-                <!-- Password -->
-                <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                        Password <span class="text-red-500">*</span>
-                    </label>
-                    <input 
-                        id="password" 
-                        type="password" 
-                        name="password" 
-                        required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Minimal 8 karakter"
-                    >
-                </div>
-
-                <!-- Confirm Password -->
-                <div>
-                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">
-                        Konfirmasi Password <span class="text-red-500">*</span>
-                    </label>
-                    <input 
-                        id="password_confirmation" 
-                        type="password" 
-                        name="password_confirmation" 
-                        required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Ketik ulang password"
-                    >
-                </div>
-
-                <!-- Submit Button -->
-                <button 
-                    type="submit"
-                    class="w-full bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300 transform hover:scale-105 shadow-lg"
-                >
-                    Daftar Sekarang
-                </button>
             </form>
 
-            <!-- Login Link -->
-            <div class="mt-6 text-center">
-                <p class="text-gray-600">
+            <div class="border-t border-white mt-8 pt-4">
+                <p class="text-white">
                     Sudah punya akun? 
-                    <a href="{{ route('login') }}" class="text-blue-600 hover:text-blue-800 font-medium">Login di sini</a>
+                    <a href="{{ route('login') }}" class="text-yellow-300 underline">Login di sini</a>
                 </p>
             </div>
         </div>
+
     </div>
+
+    <div class="absolute top-0 right-0 w-[500px] h-full hidden lg:block overflow-hidden">
+        <img src="{{ asset('images/pattern/wafe-regist.webp') }}" 
+            class="h-full object-fill w-[700px] absolute left-0"
+            alt="Pattern Gelombang Registrasi">
+        <img src="{{ asset('images/maskot/ceria.webp') }}" class="absolute bottom-0 right-0 w-[450px]"
+            alt="Maskot Ceria">
+    </div>
+
 </body>
 </html>

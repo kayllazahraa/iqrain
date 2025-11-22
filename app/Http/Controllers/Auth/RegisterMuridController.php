@@ -31,7 +31,6 @@ class RegisterMuridController extends Controller
             $validator = Validator::make($request->all(), [
                 'username' => ['required', 'string', 'max:50', 'unique:users,username', 'alpha_dash'],
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
-                'nama_lengkap' => ['required', 'string', 'max:100'],
                 'sekolah' => ['nullable', 'string', 'max:100'],
             ], [
                 'username.required' => 'Username harus diisi',
@@ -40,19 +39,16 @@ class RegisterMuridController extends Controller
                 'password.required' => 'Password harus diisi',
                 'password.min' => 'Password minimal 8 karakter',
                 'password.confirmed' => 'Konfirmasi password tidak cocok',
-                'nama_lengkap.required' => 'Nama lengkap harus diisi',
             ]);
 
             if ($validator->fails()) {
                 return back()->withErrors($validator)->withInput();
             }
 
-            // Store data di session untuk step 2
             session([
                 'murid_register_data' => [
                     'username' => $request->username,
                     'password' => $request->password,
-                    'nama_lengkap' => $request->nama_lengkap,
                     'sekolah' => $request->sekolah,
                 ]
             ]);

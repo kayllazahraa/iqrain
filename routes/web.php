@@ -7,7 +7,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Mentor\MentorDashboardController;
 use App\Http\Controllers\Auth\RegisterMuridController;
 use App\Http\Controllers\Auth\RegisterMentorController;
-use App\Http\Controllers\Auth\ForgotPasswordMuridController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Models\TingkatanIqra;
 
 use App\Http\Controllers\Murid\ModulController;
@@ -61,15 +61,31 @@ Route::middleware('guest')->group(function () {
         return view('auth.register-success');
     })->name('register.success');
 
-    // Forgot Password for Murid (with security question)
-    Route::get('/password/murid/request', [ForgotPasswordMuridController::class, 'showUsernameForm'])
-        ->name('password.murid.request');
-    Route::post('/password/murid/check', [ForgotPasswordMuridController::class, 'checkUsername'])
-        ->name('password.murid.check');
-    Route::post('/password/murid/verify', [ForgotPasswordMuridController::class, 'verifyAnswer'])
+    // 1. Halaman Input Username Awal
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'showUsernameForm'])
+        ->name('password.request');
+    Route::post('/forgot-password/check', [ForgotPasswordController::class, 'checkUsername'])
+        ->name('password.check');
+
+    // 2. Alur Murid
+    Route::get('/forgot-password/murid/question', [ForgotPasswordController::class, 'showMuridQuestion'])
+        ->name('password.murid.question');
+    Route::post('/forgot-password/murid/verify', [ForgotPasswordController::class, 'verifyMuridAnswer'])
         ->name('password.murid.verify');
-    Route::post('/password/murid/reset', [ForgotPasswordMuridController::class, 'resetPassword'])
-        ->name('password.murid.reset');
+
+    // 3. Alur Mentor
+    Route::get('/forgot-password/mentor/email', [ForgotPasswordController::class, 'showMentorEmailForm'])
+        ->name('password.mentor.email');
+    Route::post('/forgot-password/mentor/send', [ForgotPasswordController::class, 'verifyMentorEmail'])
+        ->name('password.mentor.send');
+
+    // 4. Halaman Reset Password Akhir (Shared)
+    // Route untuk Murid (tanpa token di URL) & Mentor (dengan token dari email)
+    Route::get('/reset-password/{token?}', [ForgotPasswordController::class, 'showResetForm'])
+        ->name('password.reset.form'); // Route name harus sesuai config password reset laravel
+        
+    Route::post('/reset-password', [ForgotPasswordController::class, 'updatePassword'])
+        ->name('password.update');
 });
 
 /*
@@ -175,8 +191,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::get('/mentor', [MentorController::class, 'index'])->name('mentor.index');
         Route::post('/mentor/request/{mentor_id}', [MentorController::class, 'requestBimbingan'])->name('mentor.request');
     });
+<<<<<<< HEAD
 
     
 });
 
     
+=======
+});
+>>>>>>> origin/dev-kay
