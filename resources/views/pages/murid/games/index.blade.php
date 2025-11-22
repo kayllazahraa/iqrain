@@ -3,32 +3,88 @@
 {{-- Judul halaman diambil dari $tingkatan --}}
 @section('title', 'Games - Iqra ' . $tingkatan->level)
 
-{{-- 1. Style & Font --}}
+{{-- STYLES --}}
 @push('styles')
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Mooli&family=Titan+One&display=swap" rel="stylesheet">
 
     <style>
-
-        /* Font Khusus Angka (Nanum Myeongjo) */
+        /* Font Import */
+        @import url('https://fonts.googleapis.com/css2?family=Titan+One&display=swap');
+        
         @font-face {
-            font-family: 'NanumMyeongjo';
-            src: url('{{ asset('fonts/NanumMyeongjo-Regular.ttf') }}') format('truetype');
+            font-family: 'Tegak Bersambung_IWK';
+            src: url("{{ asset('fonts/TegakBersambung_IWK.ttf') }}") format('truetype');
+            font-weight: normal;
+            font-style: normal;
         }
 
-        .font-nanum {
-            font-family: 'NanumMyeongjo', serif;
-            padding-left: 4px;
+        /* Utility Classes */
+        .font-cursive-iwk {
+            font-family: 'Tegak Bersambung_IWK', cursive !important;
         }
 
+        .font-titan {
+            font-family: 'Titan One', cursive !important;
+        }
+
+        .text-shadow-header {
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Background Pattern (pakai body aja, lebih aman) */
         body {
-            background-color: #E4F2FF;
+            background: linear-gradient(180deg, #56B1F3 0%, #D3F2FF 100%);
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background-image: url('{{ asset('images/games/game-pattern.webp') }}');
             background-size: 500px;
             background-repeat: repeat;
-            background-attachment: fixed;
             background-position: center;
+            opacity: 0.3;
+            z-index: -1;
+            pointer-events: none;
+        }
+        html {
+        scroll-behavior: smooth;
+        }
+
+        /* Animasi Goyang */
+        @keyframes wiggle {
+
+            0%,
+            100% {
+                transform: rotate(-3deg);
+            }
+
+            50% {
+                transform: rotate(3deg);
+            }
+        }
+
+        .btn-goyang {
+            /* Warna Pink */
+            background-color: #AC3F61;
+            /* Jalankan animasi */
+            animation: wiggle 0.8s ease-in-out infinite;
+        }
+
+        /* Saat di-hover: Stop goyang & perbesar sedikit */
+        .btn-goyang:hover {
+            background-color: #963653;
+            /* Pink lebih gelap dikit */
+            animation: none;
+            transform: scale(1.05);
         }
 
         /* Animasi Goyang */
@@ -67,7 +123,8 @@
     {{-- ========================================= --}}
     {{-- MODAL POP-UP (VIDEO + LANGKAH) --}}
     {{-- ========================================= --}}
-    <div id="gameModal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50"
+    {{-- MODAL POPUP (Tetap di atas untuk struktur yang benar) --}}
+    <div id="gameModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50"
         style="display: none;">
 
         {{-- Container Modal --}}
@@ -79,6 +136,20 @@
                 &times;
             </button>
 
+            <h3 class="text-3xl font-cursive-iwk text-pink-700 text-center mb-6">Cara Bermain</h3>
+
+            <div class="space-y-3 mb-8">
+                <div class="flex items-center gap-3">
+                    <div class="bg-pink-500 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold text-lg flex-shrink-0">1</div>
+                    <p class="text-pink-900 font-cursive-iwk text-xl" id="step1">Klik tombol mulai untuk memulai permainan</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="bg-pink-500 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold text-lg flex-shrink-0">2</div>
+                    <p class="text-pink-900 font-cursive-iwk text-xl" id="step2">Ikuti instruksi yang ada di layar</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="bg-pink-500 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold text-lg flex-shrink-0">3</div>
+                    <p class="text-pink-900 font-cursive-iwk text-xl" id="step3">Selesaikan tantangan untuk mendapat poin</p>
             <div class="bg-white rounded-[26px] p-6 md:p-8">
                 {{-- Judul Game --}}
                 <h3 class="text-3xl md:text-4xl font-titan text-[#234275] text-center mb-6" id="modalGameTitle">
@@ -148,6 +219,9 @@
                         </div>
                     </div>
                 </div>
+                <div class="flex items-center gap-3">
+                    <div class="bg-pink-500 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold text-lg flex-shrink-0">4</div>
+                    <p class="text-pink-900 font-cursive-iwk text-xl" id="step4">Lihat skormu di halaman evaluasi</p>
 
                 {{-- Tombol Main --}}
                 <div class="flex justify-center">
@@ -165,16 +239,20 @@
     {{-- ========================================= --}}
     <div class="container mx-auto px-6 py-12">
         <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+            
+            {{-- Text Header (KIRI) --}}
             <div class="md:w-1/2">
                 <h1 class="font-titan text-[60px] lg:text-[80px] text-[#234275] leading-none">
                     Siap untuk Berpetualang?
                 </h1>
-                <h2 class="font-cursive-iwk text-[45px] lg:text-[55px] text-gray-700 leading-tight mt-2">
+                <h2 class="font-cursive-iwk text-[45px] lg:text-[55px] text-[#234275] leading-tight mt-2">
                     Mainkan dan Raih Skormu
                 </h2>
             </div>
+            
+            {{-- Maskot Qira Game (KANAN) --}}
             <div class="md:w-1/2 flex justify-center md:justify-end">
-                <img src="/images/games/qira-game.webp" alt="Qira Game" class="max-w-sm md:max-w-md">
+                <img src="{{ asset('images/games/qira-game.webp') }}" alt="Qira Game" class="max-w-sm md:max-w-md">
             </div>
         </div>
     </div>
@@ -184,78 +262,87 @@
     {{-- ========================================= --}}
     <div class="container mx-auto px-6 py-12">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    {{-- GAME CARDS SECTION --}}
+    <div class="container mx-auto px-6 pb-12">
+        
+        {{-- ✨ CONTAINER PUTIH (Untuk wrap semua game cards) ✨ --}}
+        <div class="bg-white rounded-[40px] shadow-2xl p-8 md:p-12">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-            {{-- Kartu 1: Kartu Memori --}}
-            <div class="block p-8 rounded-[20px] shadow-lg bg-[#6DC2FF] text-[#234275] transition-transform hover:scale-105 cursor-pointer"
-                onclick="showGameModal('memory-card')">
-                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-                    <div class="md:w-1/2 text-center md:text-left">
-                        <h3 class="font-titan text-3xl mb-3">Kartu Memori</h3>
-                        <p class="font-cursive-iwk text-3xl">
-                            <span class="phrase">Yuk</span> cocokin huruf yang sama. Buka kartunya dan ingat di mana
-                            hurufnya tersembunyi!
-                        </p>
-                    </div>
-                    <div class="md:w-1/2 flex justify-center">
-                        <img src="/images/games/KartuMemori.webp" alt="Kartu Memori" class="max-w-[180px]">
+                {{-- Kartu 1: Kartu Memori (Biru) --}}
+                <div class="block p-8 rounded-[20px] shadow-lg bg-[#6DC2FF] text-[#234275] transition-transform hover:scale-105 cursor-pointer"
+                    onclick="showGameModal('memory-card')">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div class="md:w-1/2 text-center md:text-left">
+                            <h3 class="font-titan text-3xl mb-3">Kartu Memori</h3>
+                            <p class="font-cursive-iwk text-3xl">
+                                Yuk cocokin huruf yang sama. Buka kartunya dan ingat di mana hurufnya tersembunyi!
+                            </p>
+                        </div>
+                        <div class="md:w-1/2 flex justify-center">
+                            <img src="{{ asset('images/games/KartuMemori.webp') }}" alt="Kartu Memori" class="max-w-[180px]">
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {{-- Kartu 2: Labirin Hijaiyah --}}
-            <div class="block p-8 rounded-[20px] shadow-lg bg-[#FFCE6B] text-[#234275] transition-transform hover:scale-105 cursor-pointer"
-                onclick="showGameModal('labirin')">
-                <div class="flex flex-col md:flex-row-reverse items-center justify-between gap-6">
-                    <div class="md:w-1/2 text-center md:text-left">
-                        <h3 class="font-titan text-3xl mb-3">Labirin Hijaiyah</h3>
-                        <p class="font-cursive-iwk text-3xl">
-                            Temukan jalan menuju huruf hijaiyah yang dicari! Hati-hati jangan tersesat di labirin
-                        </p>
-                    </div>
-                    <div class="md:w-1/2 flex justify-center">
-                        <img src="/images/games/LabirinHijaiyah.webp" alt="Labirin Hijaiyah" class="max-w-[180px]">
+                {{-- Kartu 2: Labirin Hijaiyah (Kuning) --}}
+                <div class="block p-8 rounded-[20px] shadow-lg bg-[#FFCE6B] text-[#234275] transition-transform hover:scale-105 cursor-pointer"
+                    onclick="showGameModal('labirin')">
+                    <div class="flex flex-col md:flex-row-reverse items-center justify-between gap-6">
+                        <div class="md:w-1/2 text-center md:text-left">
+                            <h3 class="font-titan text-3xl mb-3">Labirin Hijaiyah</h3>
+                            <p class="font-cursive-iwk text-3xl">
+                                Temukan jalan menuju huruf hijaiyah yang dicari! Hati-hati jangan tersesat di labirin
+                            </p>
+                        </div>
+                        <div class="md:w-1/2 flex justify-center">
+                            <img src="{{ asset('images/games/LabirinHijaiyah.webp') }}" alt="Labirin Hijaiyah" class="max-w-[180px]">
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {{-- Kartu 3: Seret & Lepas --}}
-            <div class="block p-8 rounded-[20px] shadow-lg bg-[#F387A9] text-[#234275] transition-transform hover:scale-105 cursor-pointer"
-                onclick="showGameModal('drag-drop')">
-                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-                    <div class="md:w-1/2 text-center md:text-left">
-                        <h3 class="font-titan text-3xl mb-3">Seret & Lepas</h3>
-                        <p class="font-cursive-iwk text-3xl">
-                            Seret huruf hijaiyah ke tempat huruf latinnya yang cocok. Yuk, pasangkan dengan benar!
-                        </p>
-                    </div>
-                    <div class="md:w-1/2 flex justify-center">
-                        <img src="/images/games/SeretLepas.webp" alt="Seret & Lepas" class="max-w-[180px]">
+                {{-- Kartu 3: Seret & Lepas (Pink) --}}
+                <div class="block p-8 rounded-[20px] shadow-lg bg-[#F387A9] text-[#234275] transition-transform hover:scale-105 cursor-pointer"
+                    onclick="showGameModal('drag-drop')">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div class="md:w-1/2 text-center md:text-left">
+                            <h3 class="font-titan text-3xl mb-3">Seret & Lepas</h3>
+                            <p class="font-cursive-iwk text-3xl">
+                                Seret huruf hijaiyah ke tempat huruf latinnya yang cocok. Yuk, pasangkan dengan benar!
+                            </p>
+                        </div>
+                        <div class="md:w-1/2 flex justify-center">
+                            <img src="{{ asset('images/games/SeretLepas.webp') }}" alt="Seret & Lepas" class="max-w-[180px]">
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            {{-- Kartu 4: Tulis Huruf --}}
-            <div class="block p-8 rounded-[20px] shadow-lg bg-[#BEFA70] text-[#234275] transition-transform hover:scale-105 cursor-pointer"
-                onclick="showGameModal('tracing')">
-                <div class="flex flex-col md:flex-row-reverse items-center justify-between gap-6">
-                    <div class="md:w-1/2 text-center md:text-left">
-                        <h3 class="font-titan text-3xl mb-3">Tulis Huruf</h3>
-                        <p class="font-cursive-iwk text-3xl">
-                            Ikuti garis titik-titik dan tulis huruf hijaiyah dengan rapi. Yuk belajar menulis sambil
-                            bermain!
-                        </p>
-                    </div>
-                    <div class="md:w-1/2 flex justify-center">
-                        <img src="/images/games/TulisHuruf.webp" alt="Tulis Huruf" class="max-w-[180px]">
+        <!-- bls slnfsdffsf  -->
+                {{-- Kartu 4: Tulis Huruf (Hijau) --}}
+                <div class="block p-8 rounded-[20px] shadow-lg bg-[#BEFA70] text-[#234275] transition-transform hover:scale-105 cursor-pointer"
+                    onclick="showGameModal('tracing')">
+                    <div class="flex flex-col md:flex-row-reverse items-center justify-between gap-6">
+                        <div class="md:w-1/2 text-center md:text-left">
+                            <h3 class="font-titan text-3xl mb-3">Tulis Huruf</h3>
+                            <p class="font-cursive-iwk text-3xl">
+                                Ikuti garis titik-titik dan tulis huruf hijaiyah dengan rapi. Yuk belajar menulis sambil bermain!
+                            </p>
+                        </div>
+                        <div class="md:w-1/2 flex justify-center">
+                            <img src="{{ asset('images/games/TulisHuruf.webp') }}" alt="Tulis Huruf" class="max-w-[180px]">
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
+
+            </div> {{-- Tutup grid --}}
+            
+        </div> {{-- Tutup container putih --}}
+        
+    </div> {{-- Tutup container mx-auto --}}
 
 @endsection
 
-{{-- 3. JavaScript --}}
+{{-- SCRIPTS --}}
 @push('scripts')
     <script>
         let selectedGame = '';
