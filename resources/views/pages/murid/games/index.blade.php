@@ -176,7 +176,7 @@
                         </div>
                     </div>
                 </div>
-
+        <!-- bls slnfsdffsf  -->
                 {{-- Kartu 4: Tulis Huruf (Hijau) --}}
                 <div class="block p-8 rounded-[20px] shadow-lg bg-[#BEFA70] text-[#234275] transition-transform hover:scale-105 cursor-pointer"
                     onclick="showGameModal('tracing')">
