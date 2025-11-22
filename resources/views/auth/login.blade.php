@@ -170,7 +170,7 @@
 
                 <!-- Forgot Password & Login Button -->
                 <div class="flex items-center justify-between pt-4">
-                    <a href="{{ route('password.murid.request') }}" class="text-white hover:text-blue-900 text-base font-semibold underline">
+                    <a href="{{ route('password.request') }}" class="text-white hover:text-blue-900 text-base font-semibold underline">
                         Lupa password?
                     </a>
                     

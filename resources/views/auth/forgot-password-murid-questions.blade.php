@@ -68,7 +68,7 @@
         </form>
 
         <div class="mt-6 text-center">
-            <a href="{{ route('password.murid.request') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+            <a href="{{ route('password.request') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
                 ← Kembali
             </a>
         </div>

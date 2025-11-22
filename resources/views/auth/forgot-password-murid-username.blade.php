@@ -34,7 +34,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('password.murid.check') }}" class="space-y-6">
+        <form method="POST" action="{{ route('password.check') }}" class="space-y-6">
             @csrf
 
             <div>
