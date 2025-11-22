@@ -191,12 +191,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::get('/mentor', [MentorController::class, 'index'])->name('mentor.index');
         Route::post('/mentor/request/{mentor_id}', [MentorController::class, 'requestBimbingan'])->name('mentor.request');
     });
-<<<<<<< HEAD
 
     
 });
 
     
-=======
-});
->>>>>>> origin/dev-kay
