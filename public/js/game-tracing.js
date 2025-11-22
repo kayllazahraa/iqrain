@@ -889,7 +889,7 @@ const settings = {
         guide: '#E0E0E0',
         guideCircle: '#CCE5FF',
         stroke: '#2196F3',
-        background: '#FDF6E9',
+        background: 'white',
         completed: '#9E9E9E'
     },
     scoring: {

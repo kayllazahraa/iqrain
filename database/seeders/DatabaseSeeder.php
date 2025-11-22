@@ -25,11 +25,12 @@ class DatabaseSeeder extends Seeder
     {
         // 1. Panggil Seeder bawaanmu (Ini sudah benar)
         $this->call([
-            DashboardTableSeeder::class,
             RolePermissionSeeder::class,
             UserSeeder::class,
             TingkatanIqraSeeder::class,
-            JenisGameSeeder::class,           
+            JenisGameSeeder::class,   
+            MateriPembelajaranSeeder::class,  // ✅ HARUS sebelum MateriSeeder
+            MateriSeeder::class,               // ✅ Seeder modul huruf
         ]);
 
         // 2. Buat 20 Murid (Sekarang kita panggil Murid::factory() langsung)
@@ -95,5 +96,6 @@ class DatabaseSeeder extends Seeder
                     ]
                 );
         }
+            
     }
 }

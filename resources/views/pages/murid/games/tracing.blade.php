@@ -30,10 +30,12 @@
     <!-- Welcome Message -->
     <div id="welcome-message" class="welcome-message fixed inset-0 flex items-center justify-center opacity-0 transition-opacity duration-500 pointer-events-none z-50">
         <div class="text-center">
-            <h1 class="welcome-title text-6xl font-bold text-white mb-4">Selamat Bermain!</h1>
-            <p class="welcome-subtitle text-2xl text-white">Mari belajar menulis huruf hijaiyah</p>
+            <h1 class="welcome-title text-6xl font-titan text-white mb-4">Selamat Bermain!</h1>
+            <p class="welcome-subtitle text-2xl font-cursive-iwk text-white">Mari belajar menulis huruf hijaiyah</p>
         </div>
     </div>
+
+    
 
     <!-- Game Container -->
     <div id="game-container" class="game-container">
@@ -42,13 +44,18 @@
         <div class="game-header">
             <a href="{{ url('/murid/games/1') }}" id="exit-button" class="exit-button">Keluar</a>
             <div class="letter-info-display">
-                <span id="current-letter-arabic" class="arabic-letter" style="color: #f472b6;">ا</span>
-                <span id="current-letter-name" class="letter-name-display" style="color: #f472b6;">Alif</span>
+                <span id="current-letter-arabic" class="arabic-letter" style="color:white;">ا</span>
+                <span id="current-letter-name" class="letter-name-display" style="color: white;">Alif</span>
             </div>
         </div>
 
         <!-- Main Game Area -->
         <div class="game-main">
+
+            {{-- Balon kiri --}}
+            <div class="balloon balloon-left">
+                <img src="{{ asset('images/icon/balon.webp') }}" alt="Balon Kiri" style="width:100%; height:auto;">
+            </div>
             
             <!-- Canvas Area (Left Side) -->
             <div class="canvas-section">
@@ -59,22 +66,21 @@
                     <canvas id="tracingCanvas" width="400" height="300"></canvas>
                 </div>
                 
-                <div class="canvas-controls">
+                <div class="canvas-controls font-cursive-iwk">
                     <button id="clear-button" class="control-btn btn-clear">Hapus</button>
                     <button id="replay-button" class="control-btn btn-replay">Ulang Animasi</button>
                 </div>
             </div>
 
             <!-- Animation Preview (Right Side) -->
-            <div class="preview-section">
-                <div class="preview-title">Perhatikan Cara Menulisnya</div>
+            <div class="preview-section font-cursive-iwk">                
                 <div class="preview-wrapper">
                     <div id="letter-display" class="letter-display">ا</div>
-                    <canvas id="animationCanvas" width="300" height="250"></canvas>
+                    <canvas id="animationCanvas" width="400" height="300"></canvas>
                 </div>
             </div>
 
-            <h2 id="final-score" class="text-2xl font-bold mt-4" style="display:none;">Skor Akhir: 0</h2>
+            <h2 id="final-score" class="text-2xl font-titan mt-4" style="display:none;">Skor Akhir: 0</h2>
             {{-- Tombol untuk menyimpan skor (muncul setelah game selesai) --}}
             {{-- PENTING: data-tingkatan-id harus diisi dari controller --}}
             <!-- <button id="save-score-btn" 
@@ -87,27 +93,36 @@
 
             {{-- Tombol kembali ke menu --}}
             <a href="{{ route('murid.games.index', ['tingkatan_id' => $tingkatan->tingkatan_id ?? 0]) }}" 
-            class="btn bg-gray-500 hover:bg-gray-600 text-white mt-4 ml-2" 
+            class="btn bg-gray-500 hover:bg-gray-600 text-white mt-4 ml-2 font-titan" 
             style="display:none;" 
             id="back-to-menu-btn">
                 Kembali ke Menu Game
             </a>
 
+              <!-- Balon kanan -->
+            <div class="balloon balloon-right">
+                <img src="{{ asset('images/icon/balon.webp') }}" alt="Balon Kanan" style="width:100%; height:auto;">
+            </div>
+
+
+
         </div>
+
+
 
         <!-- Progress Footer -->
         <div class="game-footer">
             <div class="progress-container">
-                <div class="progress-label">Progress:</div>
+                <div class="progress-label font-titan">Progress:</div>
                 <div class="progress-bar">
                     <div id="progress-fill" class="progress-fill"></div>
                 </div>
-                <div id="progress-text" class="progress-text">0%</div>
+                <div id="progress-text" class="progress-text font-titan">0%</div>
             </div>
 
             <div class="score-container">
-                <div class="score-label">Akurasi:</div>
-                <div id="score-display" class="score-display">0%</div>
+                <div class="score-label font-cursive-iwk">Akurasi:</div>
+                <div id="score-display" class="score-display font-cursive-iwk">0%</div>
                 <div id="stars-display" class="stars-display">☆☆☆</div>
             </div>
 
@@ -124,30 +139,30 @@
     <div id="success-modal" class="success-modal" style="display:none;">
         <div class="success-container">
             <div class="success-animation">🎉</div>
-            <h2 class="success-title">Hebat!</h2>
+            <h2 class="success-title font-titan">Hebat!</h2>
             <div id="final-stars" class="final-stars">⭐⭐⭐</div>
-            <p id="success-message" class="success-message">Kamu menulis huruf dengan sangat baik!</p>
+            <p id="success-message" class="success-message font-cursive-iwk">Kamu menulis huruf dengan sangat baik!</p>
             
             {{-- REVISI MINOR: Akurasi --}}
-            <p id="final-accuracy" class="final-score">Akurasi: 0%</p> 
+            <p id="final-accuracy" class="final-score font-cursive-iwk">Akurasi: 0%</p> 
             
             {{-- Pesan status penyimpanan skor --}}
-            <p id="save-status" class="text-sm mt-2 text-yellow-600">Menyimpan skor...</p> 
+            <p id="save-status" class="text-sm mt-2 text-yellow-600 font-cursive-iwk">Menyimpan skor...</p> 
 
             <div class="success-buttons">
                 {{-- Tombol 1: Ulangi Huruf Ini --}}
-                <button id="try-again-button" class="btn btn-secondary" onclick="restartCurrentLetter()">
+                <button id="try-again-button" class="btn btn-secondary font-cursive-iwk" onclick="restartCurrentLetter()">
                     Ulangi Huruf Ini
                 </button>
                 
                 {{-- Tombol 2: Lanjut Huruf Berikutnya --}}
-                <button id="next-letter-button" class="btn btn-primary" onclick="loadNextLetter()">
+                <button id="next-letter-button" class="btn btn-primary font-cursive-iwk" onclick="loadNextLetter()">
                     Huruf Berikutnya
                 </button>
                 
                 {{-- Tombol 3: Selesai & Kembali ke Menu (Dipakai untuk mengambil tingkatan ID) --}}
                 <button id="back-to-menu-button" 
-                        class="btn btn-tertiary"
+                        class="btn btn-tertiary font-titan"
                         data-tingkatan-id="{{ $tingkatan->tingkatan_id ?? 1 }}"
                         onclick="window.location.href = '{{ route('murid.games.index', ['tingkatan_id' => $tingkatan->tingkatan_id ?? 1]) }}'"
                         style="margin-top: 10px;">
