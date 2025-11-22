@@ -112,10 +112,7 @@ class ForgotPasswordController extends Controller
         }
         
         try {
-            $user->email = $mentorEmail; 
-
             $token = Password::broker()->createToken($user);
-
             $user->sendPasswordResetNotification($token);
 
             return back()->with('status', 'Tautan reset password telah dikirim ke email: ' . $mentorEmail);

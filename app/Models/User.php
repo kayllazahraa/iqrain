@@ -64,13 +64,10 @@ class User extends Authenticatable
 
     public function routeNotificationForMail()
     {
-        // Cek role berdasarkan ROLE (1).txt
         if ($this->hasRole('mentor') && $this->mentor) {
-             // Mengambil email dari relasi mentor di MODEL (1).txt
             return $this->mentor->email;
         }
         
-        // Admin atau fallback lain
         return $this->email; 
     }
 }
