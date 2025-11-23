@@ -23,7 +23,7 @@
 
 </head>
 <body>
-    
+    <!-- <p>hai</p> -->
     <!-- Welcome Animation Backdrop -->
     <div id="welcome-backdrop" class="welcome-backdrop fixed inset-0 bg-black opacity-0 transition-opacity duration-500 pointer-events-none z-50"></div>
     
