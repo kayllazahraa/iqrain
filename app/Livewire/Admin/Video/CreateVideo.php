@@ -3,93 +3,62 @@
 
 namespace App\Livewire\Admin\Video;
 
+use Livewire\Component;
 use App\Models\VideoPembelajaran;
 use App\Models\TingkatanIqra;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Livewire\Component;
-use Livewire\WithFileUploads;
 
 class CreateVideo extends Component
 {
-    use WithFileUploads;
+    public $tingkatan_id;
+    public $judul_video;
+    public $video_path;
+    public $deskripsi;
 
-    public $tingkatan_id = '';
-    public $judul_video = '';
-    public $deskripsi = '';
-    public $video_file;
-    public $subtitle_file;
-
-    protected function rules()
-    {
-        return [
-            'tingkatan_id' => 'required|exists:tingkatan_iqras,tingkatan_id',
-            'judul_video' => 'required|string|max:100',
-            'deskripsi' => 'nullable|string',
-            'video_file' => 'required|file|mimes:mp4,mov,avi,wmv|max:102400', // Max 100MB
-            'subtitle_file' => 'nullable|file|mimes:srt,vtt,txt|max:2048', // Max 2MB
-        ];
-    }
-
-    protected $messages = [
-        'tingkatan_id.required' => 'Tingkatan Iqra wajib dipilih',
-        'tingkatan_id.exists' => 'Tingkatan Iqra tidak valid',
-        'judul_video.required' => 'Judul video wajib diisi',
-        'video_file.required' => 'File video wajib diunggah',
-        'video_file.mimes' => 'Format video harus mp4, mov, avi, atau wmv',
-        'video_file.max' => 'Ukuran video maksimal 100MB',
-        'subtitle_file.mimes' => 'Format subtitle harus srt, vtt, atau txt',
-        'subtitle_file.max' => 'Ukuran subtitle maksimal 2MB',
+    protected $rules = [
+        'tingkatan_id' => 'required|exists:tingkatan_iqras,tingkatan_id',
+        'judul_video' => 'required|string|max:255',
+        'video_path' => ['required', 'url'],
+        'deskripsi' => 'nullable|string|max:1000',
     ];
 
-    public function updated($propertyName)
-    {
-        $this->validateOnly($propertyName);
-    }
+    protected $messages = [
+        'tingkatan_id.required' => 'Tingkatan Iqra wajib dipilih.',
+        'judul_video.required' => 'Judul video wajib diisi.',
+        'video_path.required' => 'Link YouTube wajib diisi.',
+        'video_path.url' => 'Link YouTube harus berupa URL yang valid.',
+    ];
 
     public function save()
     {
         $this->validate();
 
-        try {
-            DB::beginTransaction();
-
-            // Upload video file
-            $videoPath = $this->video_file->store('videos', 'public');
-
-            // Upload subtitle file jika ada
-            $subtitlePath = null;
-            if ($this->subtitle_file) {
-                $subtitlePath = $this->subtitle_file->store('subtitles', 'public');
-            }
-
-            // Create video record
-            VideoPembelajaran::create([
-                'tingkatan_id' => $this->tingkatan_id,
-                'judul_video' => $this->judul_video,
-                'deskripsi' => $this->deskripsi,
-                'video_path' => $videoPath,
-                'subtitle_path' => $subtitlePath,
-            ]);
-
-            DB::commit();
-
-            session()->flash('success', 'Video "' . $this->judul_video . '" berhasil ditambahkan!');
-
-            return redirect()->route('admin.video.index');
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            // Hapus file yang sudah diupload jika ada error
-            if (isset($videoPath) && Storage::disk('public')->exists($videoPath)) {
-                Storage::disk('public')->delete($videoPath);
-            }
-            if (isset($subtitlePath) && Storage::disk('public')->exists($subtitlePath)) {
-                Storage::disk('public')->delete($subtitlePath);
-            }
-
-            session()->flash('error', 'Gagal menambahkan video: ' . $e->getMessage());
+        // Validasi manual untuk YouTube URL
+        if (!$this->isYoutubeUrl($this->video_path)) {
+            $this->addError('video_path', 'Link harus dari YouTube (youtube.com atau youtu.be).');
+            return;
         }
+
+        VideoPembelajaran::create([
+            'tingkatan_id' => $this->tingkatan_id,
+            'judul_video' => $this->judul_video,
+            'video_path' => $this->video_path,
+            'deskripsi' => $this->deskripsi,
+        ]);
+
+        session()->flash('success', 'Video berhasil ditambahkan! 🎉');
+
+        $this->dispatch('videoCreated');
+        $this->dispatch('reloadTable');
+
+        return redirect()->route('admin.video.index');
+    }
+
+    /**
+     * Check if URL is valid YouTube URL
+     */
+    private function isYoutubeUrl($url)
+    {
+        return preg_match('/^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/', $url);
     }
 
     public function render()
@@ -97,7 +66,7 @@ class CreateVideo extends Component
         $tingkatans = TingkatanIqra::orderBy('level')->get();
 
         return view('livewire.admin.video.create-video', [
-            'tingkatans' => $tingkatans,
+            'tingkatans' => $tingkatans
         ]);
     }
 }

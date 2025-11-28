@@ -3,7 +3,7 @@
     <button 
         wire:click="confirmApproval"
         type="button"
-        class="inline-flex items-center px-3 py-1.5 bg-pink-500 hover:bg-pink-600 text-white text-xs font-medium rounded transition-colors duration-200"
+        class="inline-flex items-center px-3 py-1.5 bg-pink-500 hover:bg-pink-600 text-white text-xs font-medium rounded transition-colors duration-200 border border-transparent"
         wire:loading.attr="disabled"
     >
         <i class="fas fa-check mr-1.5"></i>
@@ -11,7 +11,6 @@
         <span wire:loading wire:target="confirmApproval">Loading...</span>
     </button>
 
-    {{-- ✅ Gunakan Jetstream Dialog Modal --}}
     <x-dialog-modal wire:model="confirmApprove">
         <x-slot name="title">
             <div class="flex items-center">

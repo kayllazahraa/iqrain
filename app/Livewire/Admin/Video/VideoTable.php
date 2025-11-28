@@ -7,7 +7,7 @@ use App\Models\VideoPembelajaran;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use Illuminate\Support\Facades\Storage;
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class VideoTable extends DataTableComponent
 {
@@ -18,45 +18,44 @@ class VideoTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('video_id')
+            ->setDefaultSort('created_at', 'desc')
             ->setEmptyMessage('Tidak ada video yang ditemukan.')
-            ->setPerPageAccepted([10, 25, 50, 100])
+            ->setPerPageAccepted([5, 10, 25, 50])
             ->setPerPage(10)
             ->setSearchEnabled()
             ->setSearchDebounce(500)
             ->setSearchPlaceholder('Cari video...')
-            ->setTableAttributes([
-                'class' => 'w-full',
-            ])
-            ->setTheadAttributes([
-                'class' => 'bg-gray-50 dark:bg-gray-700',
-            ])
-            ->setThAttributes(function ($column) {
-                return [
-                    'class' => 'px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider',
-                ];
-            })
-            ->setTdAttributes(
-                function ($column, $row, $columnIndex, $rowIndex) {
-                    return [
-                        'class' => 'px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100',
-                    ];
-                }
-            );
+            ->setFilterLayoutSlideDown();
     }
 
     public function builder(): Builder
     {
         return VideoPembelajaran::query()
-            ->with('tingkatanIqra')
+            ->with(['tingkatanIqra'])
             ->select([
                 'video_pembelajarans.video_id',
                 'video_pembelajarans.tingkatan_id',
                 'video_pembelajarans.judul_video',
                 'video_pembelajarans.video_path',
-                'video_pembelajarans.subtitle_path',
                 'video_pembelajarans.deskripsi',
-                'video_pembelajarans.created_at'
+                'video_pembelajarans.created_at',
             ]);
+    }
+
+    public function filters(): array
+    {
+        $tingkatanOptions = \App\Models\TingkatanIqra::pluck('nama_tingkatan', 'tingkatan_id')->toArray();
+
+        return [
+            SelectFilter::make('Tingkatan')
+                ->options(['' => 'Semua Tingkatan'] + $tingkatanOptions)
+                ->filter(function (Builder $builder, string $value) {
+                    if ($value) {
+                        $builder->where('tingkatan_id', $value);
+                    }
+                })
+                ->setFilterPillTitle('Tingkatan'),
+        ];
     }
 
     public function columns(): array
@@ -66,71 +65,94 @@ class VideoTable extends DataTableComponent
                 ->sortable()
                 ->format(fn($v, $r, $c) => $c->getRowIndex() + 1),
 
+            Column::make('Thumbnail')
+                ->label(function ($row) {
+                    $thumbnail = $row->youtube_thumbnail;
+                    $embedUrl = $row->youtube_embed_url;
+
+                    return '
+                        <div class="group relative w-32 h-20 rounded-lg overflow-hidden cursor-pointer" 
+                             x-data="{ showVideo: false }">
+                            <!-- Thumbnail -->
+                            <img src="' . $thumbnail . '" 
+                                 alt="Thumbnail" 
+                                 class="w-full h-full object-cover"
+                                 @click="showVideo = true">
+                            
+                            <!-- Play Button Overlay -->
+                            <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center group-hover:bg-opacity-50 transition"
+                                 @click="showVideo = true">
+                                <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
+                                </svg>
+                            </div>
+
+                            <!-- Video Modal -->
+                            <div x-show="showVideo" 
+                                 x-cloak
+                                 class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
+                                 @click.away="showVideo = false"
+                                 @keydown.escape.window="showVideo = false">
+                                <div class="relative w-full max-w-4xl mx-4">
+                                    <button @click="showVideo = false" 
+                                            class="absolute -top-10 right-0 text-white hover:text-gray-300">
+                                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </button>
+                                    <div class="relative pt-[56.25%]">
+                                        <iframe x-show="showVideo"
+                                                class="absolute inset-0 w-full h-full rounded-lg"
+                                                :src="showVideo ? \'' . $embedUrl . '\' : \'\'"
+                                                frameborder="0"
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                allowfullscreen>
+                                        </iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ';
+                })
+                ->html()
+                ->excludeFromColumnSelect(),
+
             Column::make('Judul Video', 'judul_video')
                 ->sortable()
                 ->searchable()
                 ->format(function ($value, $row) {
-                    return '<div class="flex flex-col">
-                                <span class="font-medium text-gray-900 dark:text-white">' . $value . '</span>
-                                <span class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                    <i class="fas fa-layer-group mr-1"></i>' . $row->tingkatanIqra->nama_tingkatan . '
-                                </span>
-                            </div>';
+                    return '
+                        <div class="flex flex-col">
+                            <span class="font-medium text-gray-900 dark:text-white">' . e($value) . '</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">' . e($row->tingkatanIqra->nama_tingkatan ?? '-') . '</span>
+                        </div>
+                    ';
                 })
                 ->html(),
 
-            Column::make('Tingkatan', 'tingkatanIqra.nama_tingkatan')
+            Column::make('Link YouTube', 'video_path')
                 ->sortable()
                 ->searchable()
-                ->format(function ($value, $row) {
-                    $colors = [
-                        1 => 'bg-red-100 text-red-800',
-                        2 => 'bg-orange-100 text-orange-800',
-                        3 => 'bg-yellow-100 text-yellow-800',
-                        4 => 'bg-green-100 text-green-800',
-                        5 => 'bg-blue-100 text-blue-800',
-                        6 => 'bg-purple-100 text-purple-800',
-                    ];
-                    $colorClass = $colors[$row->tingkatanIqra->level] ?? 'bg-gray-100 text-gray-800';
-
-                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ' . $colorClass . '">
-                                ' . $value . '
-                            </span>';
-                })
-                ->html(),
-
-            Column::make('Subtitle', 'subtitle_path')
                 ->format(function ($value) {
-                    if ($value && Storage::disk('public')->exists($value)) {
-                        return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                    <i class="fas fa-closed-captioning mr-1"></i> Ada
-                                </span>';
-                    }
-                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                <i class="fas fa-times mr-1"></i> Tidak ada
-                            </span>';
+                    $shortUrl = strlen($value) > 40 ? substr($value, 0, 40) . '...' : $value;
+                    return '
+                        <a href="' . e($value) . '" 
+                           target="_blank" 
+                           class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 flex items-center space-x-1">
+                            <i class="fab fa-youtube text-red-600"></i>
+                            <span class="text-xs">' . e($shortUrl) . '</span>
+                        </a>
+                    ';
                 })
                 ->html(),
 
-            Column::make('Ukuran File', 'video_path')
+            Column::make('Deskripsi', 'deskripsi')
                 ->format(function ($value) {
-                    if ($value && Storage::disk('public')->exists($value)) {
-                        $bytes = Storage::disk('public')->size($value);
-                        $units = ['B', 'KB', 'MB', 'GB'];
-                        $i = 0;
-                        while ($bytes >= 1024 && $i < 3) {
-                            $bytes /= 1024;
-                            $i++;
-                        }
-                        return number_format($bytes, 2) . ' ' . $units[$i];
-                    }
-                    return '<span class="text-gray-400 italic">-</span>';
+                    if (!$value) return '<span class="text-gray-400 italic">-</span>';
+                    $short = strlen($value) > 50 ? substr($value, 0, 50) . '...' : $value;
+                    return '<span class="text-sm text-gray-600 dark:text-gray-400">' . e($short) . '</span>';
                 })
                 ->html(),
-
-            Column::make('Ditambahkan', 'created_at')
-                ->sortable()
-                ->format(fn($v) => \Carbon\Carbon::parse($v)->format('d M Y')),
 
             Column::make('Aksi')
                 ->label(function ($row) {

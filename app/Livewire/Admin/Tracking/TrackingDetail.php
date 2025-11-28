@@ -20,8 +20,6 @@ class TrackingDetail extends Component
             'mentor',
             'leaderboards',
             'hasilGames.jenisGame',
-            'hasilGames.soalDragDrop',
-            'hasilGames.gameStatic',
             'progressModuls.modul.materiPembelajaran'
         ]);
 
@@ -46,7 +44,7 @@ class TrackingDetail extends Component
         ];
 
         // Progress Modul (persentase modul yang selesai)
-        $totalModul = $this->murid->progressModuls->count();
+        $totalModul = 30; // Jumlah huruf hijaiyah tetap
         $modulSelesai = $this->murid->progressModuls->where('status', 'selesai')->count();
         $this->progressModul = $totalModul > 0 ? round(($modulSelesai / $totalModul) * 100) : 0;
     }
