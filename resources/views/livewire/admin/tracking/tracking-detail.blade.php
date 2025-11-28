@@ -108,7 +108,7 @@
 
                 {{-- Stats --}}
                 <div class="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
-                    <span>{{ $murid->progressModuls->where('status', 'selesai')->count() }} dari {{ $murid->progressModuls->count() }} modul selesai</span>
+                    <span>{{ $murid->progressModuls->where('status', 'selesai')->count() }} dari 30 modul selesai</span>
                 </div>
             </div>
 
