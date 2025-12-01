@@ -5,6 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar Mentor - IQRAIN</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <style>
+        /* Menggunakan Font Mooli & Fredoka */
+        @import url('https://fonts.googleapis.com/css2?family=Mooli&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
+        
+        /* Definisi Font Tegak Bersambung */
+        @font-face {
+            font-family: 'Tegak Bersambung_IWK';
+            src: url("{{ asset('fonts/TegakBersambung_IWK.ttf') }}") format('truetype');
+        }
+
+        .font-fredoka { font-family: 'Fredoka', sans-serif; }
+        .font-mooli { font-family: 'Mooli', sans-serif; }
+        .font-cursive { font-family: 'Tegak Bersambung_IWK', cursive; }
+    </style>
 </head>
 
 <body class="min-h-screen bg-[var(--color-iqrain-blue)] font-sans">
@@ -13,18 +29,18 @@
 
         <div class="lg:w-[calc(100%-500px)] lg:pr-10">
             
-            <h1 class="text-4xl lg:text-5xl font-titan text-white mb-4"
+            <h1 class="text-5xl lg:text-5xl font-fredoka font-bold text-white mb-6"
                 style="text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">
                 Buat Akun Baru
             </h1>
 
             <div class="inline-flex rounded-full border-2 border-white p-1 bg-white mb-4">
                 <a href="{{ route('register.murid') }}" 
-                    class="px-8 py-1 rounded-full text-gray-600 font-semibold text-base"> 
+                    class="px-10 py-2 rounded-full text-gray-600 font-semibold text-base font-fredoka font-semibold text-lg"> 
                     Murid
                 </a>
                 <a href="{{ route('register.mentor') }}" 
-                    class="px-8 py-1 rounded-full bg-pink-400 text-white font-semibold text-base">
+                    class="px-10 py-2 rounded-full bg-pink-400 text-white font-semibold text-base font-fredoka font-semibold text-lg">
                     Mentor
                 </a>
             </div>
@@ -54,18 +70,18 @@
                     </div>
 
                     <div>
-                        <label for="username" class="text-white font-semibold block mb-1 text-sm">Username</label>
+                        <label for="username" class="text-lg font-fredoka text-white font-semibold block mb-1">Username</label>
                         <input id="username" type="text" name="username" value="{{ old('username') }}" required
                             class="w-full px-3 py-2 rounded-lg border-2 {{ $errors->has('username') ? 'border-red-500' : 'border-white' }} bg-white text-gray-800 focus:ring-2 focus:ring-yellow-300"
                             placeholder="Pilih username unik">
                         @error('username')
                             <p class="text-red-300 text-xs mt-1">{{ $message }}</p>
                         @enderror
-                        <p class="text-xs text-white opacity-75 mt-1">Username hanya boleh huruf, angka, dash (-) dan underscore (_)</p>
+                        <p class="text-base font-fredoka text-white opacity-75 mt-1">Username hanya boleh huruf, angka, dash (-) dan underscore (_)</p>
                     </div>
 
                     <div>
-                        <label for="nama_lengkap" class="text-white font-semibold block mb-1 text-sm">Nama Lengkap</label>
+                        <label for="nama_lengkap" class="text-white font-semibold block mb-1 text-lg font-fredoka">Nama Lengkap</label>
                         <input id="nama_lengkap" type="text" name="nama_lengkap" value="{{ old('nama_lengkap') }}" required autofocus
                             class="w-full px-3 py-2 rounded-lg border-2 {{ $errors->has('nama_lengkap') ? 'border-red-500' : 'border-white' }} bg-white text-gray-800 focus:ring-2 focus:ring-yellow-300"
                             placeholder="Masukkan nama lengkap">
@@ -75,7 +91,7 @@
                     </div>
 
                     <div>
-                        <label for="no_wa" class="text-white font-semibold block mb-1 text-sm">Nomor WhatsApp</label>
+                        <label for="no_wa" class="text-white font-semibold block mb-1 text-lg font-fredoka">Nomor WhatsApp</label>
                         <input id="no_wa" type="tel" name="no_wa" value="{{ old('no_wa') }}" required
                             class="w-full px-3 py-2 rounded-lg border-2 {{ $errors->has('no_wa') ? 'border-red-500' : 'border-white' }} bg-white text-gray-800 focus:ring-2 focus:ring-yellow-300"
                             placeholder="08xxxxxxxxxx">
@@ -85,36 +101,36 @@
                     </div>
 
                     <div>
-                        <label for="email" class="text-white font-semibold block mb-1 text-sm">Email</label>
+                        <label for="email" class="text-white font-semibold block mb-1 text-lg font-fredoka">Email</label>
                         <input id="email" type="email" name="email" value="{{ old('email') }}" required
                             class="w-full px-3 py-2 rounded-lg border-2 {{ $errors->has('email') ? 'border-red-500' : 'border-white' }} bg-white text-gray-800 focus:ring-2 focus:ring-yellow-300"
                             placeholder="email@example.com">
                         @error('email')
                             <p class="text-red-300 text-xs mt-1">{{ $message }}</p>
                         @enderror
-                        <p class="text-xs text-white opacity-75 mt-1">Untuk reset password dan notifikasi</p>
+                        <p class="text-base font-fredoka text-white opacity-75 mt-1">Untuk reset password dan notifikasi</p>
                     </div>
 
                     <div class="lg:col-span-2 flex items-center my-2"> 
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                         </svg>
-                        <span class="text-white font-bold text-base">Keamanan</span>
+                        <span class="text-white font-bold text-base text-lg font-fredoka">Keamanan</span>
                     </div>
 
                     <div>
-                        <label for="password" class="text-white font-semibold block mb-1 text-sm">Password</label>
+                        <label for="password" class="text-white font-semibold block mb-1 text-lg font-fredoka">Password</label>
                         <input id="password" type="password" name="password" required
                             class="w-full px-3 py-2 rounded-lg border-2 {{ $errors->has('password') ? 'border-red-500' : 'border-white' }} bg-white text-gray-800 focus:ring-2 focus:ring-yellow-300"
                             placeholder="Minimal 8 karakter">
                         @error('password')
                             <p class="text-red-300 text-xs mt-1">{{ $message }}</p>
                         @enderror
-                        <p class="text-xs text-white opacity-75 mt-1">Password harus minimal 8 karakter.</p>
+                        <p class="text-base font-fredoka text-white opacity-75 mt-1">Password harus minimal 8 karakter.</p>
                     </div>
 
                     <div>
-                        <label for="password_confirmation" class="text-white font-semibold block mb-1 text-sm">Konfirmasi Password</label>
+                        <label for="password_confirmation" class="text-white font-semibold block mb-1 text-lg font-fredoka">Konfirmasi Password</label>
                         <input id="password_confirmation" type="password" name="password_confirmation" required
                             class="w-full px-3 py-2 rounded-lg border-2 {{ $errors->has('password_confirmation') ? 'border-red-500' : 'border-white' }} bg-white text-gray-800 focus:ring-2 focus:ring-yellow-300"
                             placeholder="Ketik ulang password">
@@ -127,7 +143,7 @@
                 
                 <div class="mt-6 flex justify-end">
                     <button type="submit"
-                        class="bg-pink-400 text-white font-bold py-2.5 px-8 rounded-xl shadow-lg hover:bg-pink-500 transition">
+                        class="font-fredoka bg-pink-400 text-white font-semibold py-2.5 px-8 rounded-xl shadow-lg hover:bg-pink-500 transition">
                         Ajukan Daftar
                     </button>
                 </div>
@@ -135,9 +151,9 @@
             </form>
 
             <div class="border-t border-white mt-8 pt-4">
-                <p class="text-white">
+                <p class="text-base font-fredoka text-white">
                     Sudah punya akun? 
-                    <a href="{{ route('login') }}" class="text-yellow-300 underline">Login di sini</a>
+                    <a href="{{ route('login') }}" class="text-yellow-400 text-base font-fredoka">Login di sini</a>
                 </p>
             </div>
         </div>

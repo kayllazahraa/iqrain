@@ -7,6 +7,17 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
+
+        /* Font Mooli & Fredoka */
+        @import url('https://fonts.googleapis.com/css2?family=Mooli&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
+        
+        /* Definisi Font Tegak Bersambung */
+        @font-face {
+            font-family: 'Tegak Bersambung_IWK';
+            src: url("{{ asset('fonts/TegakBersambung_IWK.ttf') }}") format('truetype');
+        }
+
         .color-block {
             width: 1rem;
             height: 1rem;
@@ -35,21 +46,25 @@
             transition: background-color 0.15s ease;
         }
 
+        .font-fredoka { font-family: 'Fredoka', sans-serif; }
+        .font-mooli { font-family: 'Mooli', sans-serif; }
+        .font-cursive { font-family: 'Tegak Bersambung_IWK', cursive; }
+
     </style>
 </head>
 
 <body class="min-h-screen bg-[var(--color-iqrain-blue)]">
 
-    <div class="max-w-7xl mx-auto py-10 px-6 relative">
+    <div class="max-w-7xl mx-auto py-20 px-6 relative">
         <div class="lg:w-[calc(100%-500px)] lg:pr-10">
 
-        <h1 class="text-4xl lg:text-5xl font-titan text-white mb-6"
+        <h1 class=" text-4xl lg:text-5xl font-fredoka font-bold text-white mb-6"
             style="text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">
-            Isi Pertanyaan Dulu Yuk
+            Isi Pertanyaan Dulu Yuk !
         </h1>
 
-        <p class="text-white text-lg mb-4 opacity-90">
-            Pertanyaan keamanan jika kamu lupa password
+        <p class="font-fredoka text-white text-lg mb-4 opacity-90">
+            Pertanyaan keamanan kalau kamu lupa password
         </p>
 
         
@@ -62,7 +77,7 @@
         {{-- Mengubah tampilan error agar lebih informatif --}}
         @if ($errors->any())
             <div class="mb-6 p-4 bg-red-100 border-l-4 border-red-600 text-red-700 rounded-lg">
-                <p class="font-bold mb-2">Terjadi Kesalahan! Mohon periksa kembali isian Anda:</p>
+                <p class="font-fredoka font-bold mb-2">Terjadi Kesalahan! Mohon periksa kembali isian Anda:</p>
                 <ul class="list-disc ml-5 text-sm">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -77,12 +92,12 @@
 
             <div class="bg-white rounded-2xl p-6 shadow-lg border-2 border-white">
 
-                <label class="text-gray-800 font-semibold block mb-3">
+                <label class="text-2xl font-fredoka text-pink-600 font-semibold block mb-3">
                     Pertanyaan Keamanan
                 </label>
 
                 <div class="w-full px-4 py-3 bg-blue-50 border-2 border-blue-300 rounded-xl mb-3">
-                    <p class="text-gray-700 font-medium">Apa warna kesukaanmu?</p>
+                    <p class="font-fredoka text-gray-700 font-medium">Apa warna kesukaanmu?</p>
                 </div>
                 <input type="hidden" name="pertanyaan" value="Apa warna kesukaanmu?">
 
@@ -92,7 +107,7 @@
                     {{-- Tombol Tampil --}}
                     <button type="button" 
                         id="dropdown-button"
-                        class="w-full px-4 py-3 text-left rounded-xl border-2 {{ $errors->has('jawaban') ? 'input-error-border' : 'border-white' }} bg-white text-gray-800 focus:ring-2 focus:ring-yellow-300 flex items-center justify-between transition duration-150"
+                        class="w-full px-4 py-3 text-left rounded-xl border-2 {{ $errors->has('jawaban') ? 'input-error-border' : 'border-white' }} text-gray-800 ring-2 ring-yellow-300 flex items-center justify-between transition duration-150 font-fredoka"
                         aria-haspopup="true" 
                         aria-expanded="false"
                     >
@@ -152,13 +167,13 @@
                     </p>
                 @enderror
                 
-                <p class="text-xs text-gray-600 mt-2">
+                <p class="font-fredoka text-sm text-gray-600 mt-2">
                     💡 <strong>Tips:</strong> Ingat baik-baik jawabanmu ya! Jawaban ini akan dipakai jika kamu lupa password.
                 </p>
 
                 <div class="bg-yellow-50 rounded-xl p-4 mt-4 border border-yellow-300">
-                    <p class="text-sm text-gray-700">
-                        <strong>Kenapa hanya 1 pertanyaan?</strong><br>
+                    <p class="font-fredoka text-sm text-gray-700">
+                        <strong class="text-pink-600 text-base">Kenapa hanya 1 pertanyaan?</strong><br>
                         Supaya lebih mudah diingat! Cukup ingat warna kesukaanmu saja 🌈
                     </p>
                 </div>
@@ -167,13 +182,13 @@
 
             <div class="mt-6 flex space-x-4">
                 <a href="{{ route('register.murid') }}"
-                    class="bg-gray-300 text-gray-800 font-bold py-3 px-10 rounded-xl shadow-lg 
+                    class="bg-gray-300 font-fredoka text-gray-800 font-bold py-3 px-10 rounded-xl shadow-lg 
                             hover:bg-gray-400 transition text-center flex-1">
                     Kembali
                 </a>
 
                 <button type="submit"
-                    class="flex-1 bg-pink-400 text-white font-bold py-3 px-10 rounded-xl shadow-lg
+                    class="flex-1 bg-pink-400 text-white font-fredoka font-bold py-3 px-10 rounded-xl shadow-lg
                             hover:bg-pink-500 transition">
                     Daftar
                 </button>
@@ -181,9 +196,9 @@
         </form>
 
         <div class="border-t border-white mt-10 pt-4">
-            <p class="text-white">
+            <p class="font-fredoka text-white">
                 Sudah punya akun?
-                <a href="{{ route('login') }}" class="text-yellow-300 underline">Login di sini</a>
+                <a href="{{ route('login') }}" class="font-fredoka text-yellow-300">Klik untuk login</a>
             </p>
         </div>
     </div>

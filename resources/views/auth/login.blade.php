@@ -91,7 +91,7 @@
         }
     </style>
 </head>
-    <body class="min-h-screen flex items-center justify-center relative bg-[#7CC9EE]">
+    <body class="min-h-screen flex items-center justify-center relative bg-[#afe4ffff]">
     
     <div class="w-full max-w-6xl flex rounded-3xl shadow-2xl overflow-hidden relative min-h-[600px]">
 

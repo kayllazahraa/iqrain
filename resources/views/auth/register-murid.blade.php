@@ -5,26 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buat Akun Baru - IQRAIN</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <style>
+                /* Menggunakan Font Mooli & Fredoka */
+        @import url('https://fonts.googleapis.com/css2?family=Mooli&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
+        
+        /* Definisi Font Tegak Bersambung */
+        @font-face {
+            font-family: 'Tegak Bersambung_IWK';
+            src: url("{{ asset('fonts/TegakBersambung_IWK.ttf') }}") format('truetype');
+        }
+
+        .font-fredoka { font-family: 'Fredoka', sans-serif; }
+        .font-mooli { font-family: 'Mooli', sans-serif; }
+        .font-cursive { font-family: 'Tegak Bersambung_IWK', cursive; }
+
+
+    </style>
 </head>
 
 <body class="min-h-screen bg-[var(--color-iqrain-blue)] font-sans">
 
-    <div class="max-w-7xl mx-auto py-10 px-6 relative">
+    <div class="max-w-7xl mx-auto py-20 px-6 relative">
 
-        <div class="lg:w-[calc(100%-500px)] lg:pr-10">
+        <div class="lg:w-[calc(100%-300px)] lg:pr-10">
             
-            <h1 class="text-4xl lg:text-5xl font-titan text-white mb-6"
+            <h1 class="text-5xl lg:text-5xl font-fredoka font-bold text-white mb-6"
                 style="text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">
                 Buat Akun Baru
             </h1>
 
             <div class="inline-flex rounded-full border-2 border-white p-1 bg-white mb-6">
                 <a href="{{ route('register.murid') }}" 
-                    class="px-10 py-2 rounded-full bg-pink-400 text-white font-semibold text-lg">
+                    class="px-10 py-2 rounded-full bg-pink-400 text-white font-fredoka font-semibold text-lg">
                     Murid
                 </a>
                 <a href="{{ route('register.mentor') }}" 
-                    class="px-10 py-2 rounded-full text-gray-600 font-semibold text-lg">
+                    class="px-10 py-2 rounded-full text-gray-600 font-fredoka font-semibold text-lg">
                     Mentor
                 </a>
             </div>
@@ -42,7 +60,7 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6"> 
                 
                     <div>
-                        <label class="text-white font-semibold block mb-2">Username</label>
+                        <label class="text-lg text-white font-fredoka font-semibold block mb-2">Username</label>
                         <input type="text"
                             name="username"
                             value="{{ old('username') }}"
@@ -57,7 +75,7 @@
                     </div>
 
                     <div>
-                        <label class="text-white font-semibold block mb-2">Sekolah</label>
+                        <label class="text-lg text-white font-fredoka font-semibold block mb-2">Sekolah</label>
                         <input type="text"
                             name="sekolah"
                             value="{{ old('sekolah') }}"
@@ -67,7 +85,7 @@
                     </div>
 
                     <div>
-                        <label class="text-white font-semibold block mb-2">Password</label>
+                        <label class="text-lg text-white font-fredoka font-semibold block mb-2">Password</label>
                         <input type="password"
                             name="password"
                             required
@@ -80,7 +98,7 @@
                     </div>
 
                     <div>
-                        <label class="text-white font-semibold block mb-2">Konfirmasi Password</label>
+                        <label class="text-lg text-white font-fredoka font-semibold block mb-2">Konfirmasi Password</label>
                         <input type="password"
                             name="password_confirmation"
                             required
@@ -96,16 +114,16 @@
 
                 <div class="mt-6">
                     <button type="submit"
-                    class="bg-pink-400 text-white font-bold py-3 px-10 rounded-xl shadow-lg hover:bg-pink-500 transition">
+                    class="bg-pink-400 font-fredoka text-white text-lg font-bold py-3 px-10 rounded-xl shadow-lg hover:bg-pink-500 transition">
                         Lanjut
                     </button>
                 </div>
             </form>
 
             <div class="border-t border-white mt-10 pt-4">
-                <p class="text-white">
+                <p class="text-base font-fredoka text-white">
                     Sudah punya akun? 
-                    <a href="{{ route('login') }}" class="text-yellow-300 underline">Login di sini</a>
+                    <a href="{{ route('login') }}" class="text-yellow-400">Login di sini</a>
                 </p>
             </div>
         </div>

@@ -5,6 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrasi Berhasil - IQRAIN</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <style>
+         /* Menggunakan Font Mooli & Fredoka */
+        @import url('https://fonts.googleapis.com/css2?family=Mooli&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
+        
+        /* Definisi Font Tegak Bersambung */
+        @font-face {
+            font-family: 'Tegak Bersambung_IWK';
+            src: url("{{ asset('fonts/TegakBersambung_IWK.ttf') }}") format('truetype');
+        }
+
+        .font-fredoka { font-family: 'Fredoka', sans-serif; }
+        .font-mooli { font-family: 'Mooli', sans-serif; }
+        .font-cursive { font-family: 'Tegak Bersambung_IWK', cursive; }
+    </style>
 </head>
 
 <body class="min-h-screen bg-[var(--color-iqrain-blue)] font-sans">
@@ -20,12 +36,12 @@
             </div>
 
             <div class="mb-6">
-                <h1 class="text-5xl lg:text-6xl font-titan text-white mb-2"
+                <h1 class="text-5xl lg:text-6xl font-mooli font-bold text-white mb-2"
                     style="text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">
                     Selamat!
                 </h1>
-                <p class="text-xl text-white mb-4">
-                    Akun kamu sudah berhasil didaftarkan
+                <p class="font-cursive text-4xl text-white mb-4">
+                    Akun kamu sudah berhasil didaftarkan.
                 </p>
                 
                 @if(session('message'))
@@ -34,7 +50,7 @@
             </div>
 
             <a href="{{ route('login') }}" 
-               class="inline-block bg-pink-400 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-pink-500 transition">
+               class="inline-block bg-pink-400 text-white font-mooli font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-pink-500 transition">
                 Yuk Mulai Belajar!
             </a>
             
